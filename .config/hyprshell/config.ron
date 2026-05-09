@@ -1,0 +1,20 @@
+(
+    version: 3,
+    windows: (
+        
+        scale: 8.5,
+        items_per_row: 5,
+
+        // 1. Disable the overview (the launcher)
+        overview: None,
+
+        // 2. Enable the simple switcher
+        switch: (
+            // This is the modifier key to hold (e.g., "alt")
+            modifier: "alt",
+            // You can add other switch-specific options here, like:
+            // filter_by: [],
+            // switch_workspaces: true,
+        ),
+    ),
+)   

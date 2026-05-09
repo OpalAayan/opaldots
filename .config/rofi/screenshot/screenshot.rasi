@@ -1,7 +1,5 @@
 /**
- * Fixed Rofi Theme
- * - Fixed "Weird Selection" by moving padding to element and making text transparent.
- * - Fixed syntax error (extra closing brace).
+A Basic elegant ScreenShot menu
  */
 
 configuration {
@@ -55,8 +53,6 @@ element-text {
     /* Alignment */
     horizontal-align:    0.5;
     vertical-align:      0.5;
-
-    /* CRITICAL FIX: Make background transparent so element's border-radius works */
     background-color:    transparent;
     text-color:          inherit;
     

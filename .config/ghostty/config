@@ -1,7 +1,7 @@
 # --- Background Image Settings ---
-background-image =  /home/aayanopal/Pictures/Wallpaper/demo-removebg.png
-background-image-fit = cover
-background-image-opacity = 0.5
+#background-image =  /home/aayanopal/Pictures/HyprWalls/wall_009.png
+#background-image-fit = cover
+#background-image-opacity = 0.5
 
 # --- Font Settings ---
 font-family = "FiraCode Nerd Font"
@@ -9,44 +9,47 @@ font-size = 13.5
 # This makes the "rich" colors pop more against the dark background
 font-thicken = true
 
-# --- Theme: Cosmic Abyss (Custom) ---
-# Deep, dark, rich void background. Not grey, but a very deep ink-blue/black.
-background = #0b0f16
-foreground = #a9b1d6
-selection-background = #364A82
-selection-foreground = #c0caf5
-
-# Cursor (Electric Cyan to cut through the dark)
-cursor-color = #0DB9D7
-cursor-text = #0b0f16
-cursor-style = underline
-cursor-style-blink = true
-
-# --- Palette (Rich & Saturated) ---
-palette = 0=#15161e
-palette = 1=#f7768e
-palette = 2=#9ece6a
-palette = 3=#e0af68
-palette = 4=#7aa2f7
-palette = 5=#bb9af7
-palette = 6=#7dcfff
-palette = 7=#a9b1d6
-palette = 8=#414868
-palette = 9=#f7768e
-palette = 10=#9ece6a
-palette = 11=#e0af68
-palette = 12=#7aa2f7
-palette = 13=#bb9af7
-palette = 14=#7dcfff
-palette = 15=#c0caf5
-
 # --- Window & Layout ---
 # 0.90 opacity preserves the "deep dark" look while keeping it modern
 background-opacity = 0.90
 window-padding-x = 12
 window-padding-y = 12
-window-decoration = false
+window-decoration = true
 confirm-close-surface = false
+
+# Cursor (Rich Iris to cut through the dark)
+cursor-color = #c4a7e7
+cursor-text = #0c0a10
+cursor-style = underline
+cursor-style-blink = true
+
+# --- Theme: Velvet Rosé (Custom) ---
+# Deep, dark plum/blackberry velvet background. 
+background = #0f0914
+foreground = #e6d6e1
+selection-background = #3b2847
+selection-foreground = #fcf0f7
+
+# --- Palette (Pink, Purple, and Rich Velvet) ---
+# Normal colors
+palette = 0=#1e1424  
+palette = 1=#d6406b  
+palette = 2=#8c946e  
+palette = 3=#d49b55  
+palette = 4=#835f96  
+palette = 5=#bf659e  
+palette = 6=#d982a6  
+palette = 7=#e6d6e1  
+
+# Bright colors (Pushed towards neon-velvet for contrast)
+palette = 8=#3b2847  
+palette = 9=#f25e8a  
+palette = 10=#a5ad85 
+palette = 11=#f0b671 
+palette = 12=#a178b5 
+palette = 13=#de7abd 
+palette = 14=#f59bc2 
+palette = 15=#fcf0f7
 
 # --- Shell Integration ---
 # Keeps the prompt clean

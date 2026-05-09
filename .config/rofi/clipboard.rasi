@@ -1,142 +1,213 @@
-/* * ROFI Clipboard Theme - UnixPorn Style
-   * Style: Dracula + Catppuccin Mocha
+/* * ROFI Clipboard Theme
+   * Style: Compact Nord (Muted)
    */
+
+@theme "/dev/null"
 
 configuration {
     modi: "dmenu";
-    font: "FiraCode Nerd Font mono 12";
+    font: "FiraCode Nerd Font mono 11";
     show-icons: true;
 }
 
 * {
-    /* Palette */
-    bg: #1e1e2e;          /* Base */
-    bg-alt: #313244;      /* Surface0 */
-    fg: #DCD7BA;          /* Text */
-    accent: #cba6f7;      /* Mauve */
-    urgent: #f38ba8;      /* Red */
-    border: #89b4fa;      /* Blue */
-    
+    /* Nord Palette - Muted and Natural */
+    bg:           #2e3440;      /* Polar Night 1 */
+    bg-alt:       #3b4252;      /* Polar Night 2 */
+    bg-element:   #434c5e;      /* Polar Night 3 */
+    fg:           #eceff4;      /* Snow Storm 3 */
+    fg-muted:     #d8dee9;      /* Snow Storm 1 */
+    accent:       #88c0d0;      /* Frost Blue */
+    accent-alt:   #81a1c1;      /* Frost Darker Blue */
+    urgent:       #bf616a;      /* Aurora Red */
+
+    /* Rofi 2.0 overrides */
+    background:                  @bg;
+    foreground:                  @fg;
+    normal-background:           @bg;
+    normal-foreground:           @fg;
+    alternate-normal-background: @bg;
+    alternate-normal-foreground: @fg;
+    selected-normal-background:  @bg-alt;
+    selected-normal-foreground:  @accent;
+    urgent-background:           @bg;
+    urgent-foreground:           @urgent;
+    alternate-urgent-background: @bg;
+    alternate-urgent-foreground: @urgent;
+    selected-urgent-background:  @bg-alt;
+    selected-urgent-foreground:  @urgent;
+    active-background:           @bg;
+    active-foreground:           @accent-alt;
+    alternate-active-background: @bg;
+    alternate-active-foreground: @accent-alt;
+    selected-active-background:  @bg-alt;
+    selected-active-foreground:  @accent-alt;
+
     background-color: transparent;
-    text-color: #A021EF;
-    margin: 0;
-    padding: 0;
-    spacing: 0;
+    text-color:       @fg;
+    margin:           0;
+    padding:          0;
+    spacing:          0;
 }
 
 window {
-    width: 600px;
-    height: 500px;
+    width:            600px;
+    height:           500px;
     background-color: @bg;
-    border: 2px;
-    border-color: @accent;
-    border-radius: 12px;
+    border:           2px;
+    border-color:     @accent-alt;
+    border-radius:    10px;
 }
 
 mainbox {
     children: [inputbar, listview, message];
-    padding: 12px; /* Increased padding slightly */
+    padding:  10px;
+    background-color: #1E1E2F;
 }
 
 /* --- Input Bar --- */
 inputbar {
     background-color: @bg-alt;
-    border-radius: 10px;
-    padding: 8px; /* Bigger input bar */
-    children: [icon-search, entry, button-wipe];
-    orientation: horizontal;
-    margin: 0 0 12px 0;
+    border:           1px;
+    border-color:     @bg-element;
+    border-radius:    8px;
+    padding:          7px;
+    children:         [icon-search, entry, button-wipe];
+    orientation:      horizontal;
+    margin:           0 0 10px 0;
 }
 
 icon-search {
-    expand: false;
-    filename: "search";
-    size: 24px;
-    vertical-align: 0.5;
-    margin: 0 10px;
+    expand:           false;
+    filename:         "search";
+    size:             18px;
+    vertical-align:   0.5;
+    margin:           0 8px;
     background-color: inherit;
-    text-color: @accent;
-    content: "";
-    font: "JetBrainsMono Nerd Font 16";
+    text-color:       @accent-alt;
+    content:          "";
+    font:             "JetBrainsMono Nerd Font 14";
 }
 
 entry {
-    background-color: inherit;
-    placeholder: "Search Clipboard...";
-    placeholder-color: #6c707fff;
-    vertical-align: 0.5;
-    text-color: #dfbfffff;
-    expand: true;
+    background-color:  inherit;
+    placeholder:       "Search Clipboard...";
+    placeholder-color: @fg-muted;
+    vertical-align:    0.5;
+    text-color:        #CDD6F4;
+    expand:            true;
 }
 
 /* The Wipe Button */
 button-wipe {
-    expand: false;
-    content: "  ";
-    font: "JetBrainsMono Nerd Font 16";
-    text-color: @urgent;
-    background-color: @bg;
-    border-radius: 8px;
-    padding: 4px 8px; 
-    margin: 0 0 0 8px;
-    cursor: pointer;
-    action: "kb-custom-1";
+    expand:           false;
+    content:          "  ";
+    font:             "JetBrainsMono Nerd Font 12";
+    text-color:       #F38BA8;
+    background-color: #1A1B26;
+    border-radius:    40px;
+    padding:          6px 9px 8px 6px; 
+    margin:           0 0 0 0px;
+    cursor:           pointer;
+    action:           "kb-custom-1";
 }
 
 /* --- List View --- */
 listview {
-    columns: 1;
-    lines: 7;         /* Show one more line */
-    cycle: true;
-    dynamic: true;
-    scrollbar: false;
-    spacing: 6px;     /* More breathing room between items */
+    columns:    1;
+    lines:      12; /* More items shown */
+    cycle:      true;
+    dynamic:    true;
+    scrollbar:  false;
+    spacing:    8px; /* Compact spacing between panels */
 }
 
+/* --- Scrollbar --- */
+scrollbar {
+    width:            6px;
+    border:           0;
+    handle-color:     #89B4FA;
+    handle-width:     4px;
+    background-color: #1A1820;
+    padding:          0 0 0 4px;
+}
+
+/* --- Elements (Panels) --- */
 element {
-    orientation: horizontal;
-    padding: 8px 12px;
-    border-radius: 8px;
+    orientation:      horizontal;
+    padding:          6px 10px;
+    border-radius:    6px;
     background-color: @bg;
-    spacing: 12px;    /* Space between icon and text */
-    
-    
+    border:           1px;
+    border-color:     @bg-element; /* Subtle border for all elements */
+    spacing:          10px;
 }
 
-element selected {
+element normal.normal, element alternate.normal {
+    background-color: @bg;
+    text-color:       @fg;
+    border-color:     @bg-element;
+}
+
+element selected.normal {
     background-color: @bg-alt;
-    text-color: @accent;
-    border: 1px;
-    border-color: @accent;
+    text-color:       @accent;
+    border:           1px;
+    border-color:     @accent; /* Highlight border */
+}
+
+element normal.urgent, element alternate.urgent {
+    background-color: @bg;
+    text-color:       @urgent;
+    border-color:     @bg-element;
+}
+
+element selected.urgent {
+    background-color: @bg-alt;
+    text-color:       @urgent;
+    border:           1px;
+    border-color:     @urgent;
+}
+
+element normal.active, element alternate.active {
+    background-color: @bg;
+    text-color:       @accent-alt;
+    border-color:     @bg-element;
+}
+
+element selected.active {
+    background-color: @bg-alt;
+    text-color:       @accent-alt;
+    border:           1px;
+    border-color:     @accent-alt;
 }
 
 element-icon {
-    size: 32px;      /* Reduced from 48px to look cleaner in list */
-    vertical-align: 0.5;
+    size:             24px; /* Smaller icon */
+    vertical-align:   0.5;
     background-color: transparent;
 }
 
 element-text {
-    vertical-align: 0.5;
-    text-color: inherit;
+    vertical-align:   0.5;
+    text-color:       inherit;
+    background-color: transparent;
 }
 
 /* --- Message / Footer --- */
-    message {
-        /* This acts as the container */
-        border: 2px;
-        border-color: @bg-alt; /* Matches the background properly */
-        padding: 10px;
-        margin: 10px 0 0 0;    /* More space from the list */
-        border-radius: 8px;
-        background-color: @bg-alt; 
-    }
+message {
+    border:           1px;
+    border-color:     #4D4D4D;
+    padding:          8px;
+    margin:           10px 0 0 0;
+    border-radius:    6px;
+    background-color: #313244; 
+}
 
-    textbox {
-        /* This is the actual text element */
-        background-color: transparent; /* Fixes the color mismatch */
-        text-color: @fg;               /* Uses your main text color */
-        vertical-align: 0.5;
-        horizontal-align: 0.5;
-        border: 0px; 
-    }
+textbox {
+    background-color: transparent;
+    text-color:        #f9e2af;
+    vertical-align:   0.5;
+    horizontal-align: 0.5;
+    border:           0px; 
+}

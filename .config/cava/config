@@ -4,7 +4,8 @@ framerate = 60
 sensitivity = 100
 autosens = 1
 integral = 1
-ignore = 0
+gravity = 100       
+ignore = 100
 sleep_timer = 0
 
 [input]
@@ -12,13 +13,13 @@ method = pulse
 source = auto
 
 [output]
-method = ncurses
+method = noncurses
 mono = yes
 bar_width = 2
 bar_spacing = 2         ; Slightly spaced for better visual feel
 bar_height = 0          ; Auto height
 lower_cutoff = 20       ; Reduces background rumble
-upper_cutoff = 100
+upper_cutoff = 10000    ; Opens up the spectrum to show mids and treble!
 
 [color]
 gradient = 1

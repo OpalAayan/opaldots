@@ -6,6 +6,7 @@ configuration {
     modi: "drun"; 
     
     show-icons: true;
+    icon-theme: "Tela-dracula";
     display-drun: "";
     drun-display-format: "{name}";
 }

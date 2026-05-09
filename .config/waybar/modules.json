@@ -6,7 +6,7 @@
             "critical": 15
         },
         "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
         "format-plugged": " {capacity}%",
         "format-alt": "{icon} {time}",
         "format-missing": "󱟩",
@@ -17,13 +17,13 @@
             " ",
             " "
         ],
-        "interval": 5
+        "interval": 3
     },
     // --- Bluetooth ---
     "bluetooth": {
-        "format": " {status}",
-        "format-disabled": " OFF",
-        "format-connected": " ({num_connections})",
+        "format": "",
+        "format-disabled": "󰂲",
+        "format-connected": "󰂱 ({num_connections})",
         "format-off": "",
         "interval": 30,
         "on-click": "blueberry",
@@ -41,19 +41,19 @@
         "interval": 30,
         "format": " {percentage_used}%",
         "path": "/",
-        "on-click": "kitty -e nohup baobab &"
+        "on-click": "baobab"
     },
     // --- Memory (Updated) ---
     "memory": {
         "format": " {percentage}%",
         // "on-click": "kitty -e btop"
-        "on-click": "~/.config/hypr/scripts/btop-floating.sh"
+        "on-click": "~/.config/waybar/scripts/btop-floating.sh"
     },
     // --- Temperature ---
     "temperature": {
         "thermal-zone": 0,
         "format": " {temperatureC}°C",
-        "format-critical": " {temperatureC}°C",
+        "format-critical": " {temperatureC}°C",
         "critical-threshold": 80,
         "interval": 5
     },
@@ -61,7 +61,7 @@
     "cpu": {
         "format": " {usage}%",
         //"on-click": "kitty -e btop"
-        "on-click": "~/.config/hypr/scripts/btop-floating.sh"
+        "on-click": "~/.config/waybar/scripts/btop-floating.sh"
     },
     // --- Workspaces ---
     "hyprland/workspaces": {
@@ -86,7 +86,7 @@
     },
     // --- Date Module (as a clock instance) ---
     "clock#date": {
-        "format": " {:%a %d}",
+        "format": " {:%a %d;%b}",
         "on-click": "gnome-calendar",
         "interval": 10,
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
@@ -110,7 +110,7 @@
         "format": "{}",
         "return-type": "json",
         "interval": 1,
-        "exec": "~/.config/hypr/scripts/newday_alert.sh",
+        "exec": "~/.config/waybar/scripts/newday_alert.sh",
         "tooltip": false
     },
     // --- Time Module (as a clock instance) ---
@@ -122,7 +122,7 @@
     },
     // --- Dynamic Clock (Script) ---
     "custom/dynamic_clock": {
-        "exec": "~/.config/hypr/scripts/dynamic_clock.sh",
+        "exec": "~/.config/waybar/scripts/dynamic_clock.sh",
         "interval": 1,
         "format": "{}",
         "tooltip": true,
@@ -149,7 +149,7 @@
             "󰤨"
         ],
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{essid} ({signalStrength}%)\n⬆ {bandwidthUpBytes} ⬇ {bandwidthDownBytes}",
-        "on-click": "alacritty -e nmtui"
+        "on-click": "~/.config/waybar/scripts/nmtui-floating.sh"
     },
     // --- Audio ---
     "pulseaudio": {
@@ -164,8 +164,8 @@
         },
         "on-click": "pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-        "on-scroll-up": "~/.config/hypr/scripts/scroll_volume.sh up",
-        "on-scroll-down": "~/.config/hypr/scripts/scroll_volume.sh down",
+        "on-scroll-up": "~/.config/waybar/scripts/scroll_volume.sh up",
+        "on-scroll-down": "~/.config/waybar/scripts/scroll_volume.sh down",
         "scroll-step": 1
     },
     // --- Color Picker ---
@@ -173,36 +173,36 @@
         "format": "󰃉",
         "tooltip": true,
         "tooltip-format": "Color picker",
-        "on-click": "~/.config/hypr/scripts/picker.sh"
+        "on-click": "~/.config/waybar/scripts/picker.sh"
     },
     // --- Power profile ---
     "custom/powerpfp": {
         "format": "{text}",
         "tooltip": true,
         "return-type": "json",
-        "exec": "~/.config/hypr/scripts/power-profile.sh get",
+        "exec": "~/.config/waybar/scripts/power-profile.sh get",
         "interval": 5,
-        "on-click": "~/.config/hypr/scripts/power-profile.sh cycle"
+        "on-click": "~/.config/waybar/scripts/power-profile.sh cycle"
     },
     // --- Night Light ---
     "custom/nightlight": {
         "format": "󰖔",
         "tooltip": true,
         "tooltip-format": "Night Light",
-        "on-click": "~/.config/hypr/scripts/nightlight_control.sh",
-        "on-scroll-up": "~/.config/hypr/scripts/nightlight_control.sh increase",
-        "on-scroll-down": "~/.config/hypr/scripts/nightlight_control.sh decrease"
+        "on-click": "~/.config/waybar/scripts/nightlight_control.sh",
+        "on-scroll-up": "~/.config/waybar/scripts/nightlight_control.sh increase",
+        "on-scroll-down": "~/.config/waybar/scripts/nightlight_control.sh decrease"
     },
     // --- Brightness ---
     "custom/brightness": {
         "format": "󱞖", 
         "return-type": "json",
-        "exec": "~/.config/hypr/scripts/brightness_waybar.sh",
+        "exec": "~/.config/waybar/scripts/brightness_waybar.sh",
         "interval": 1,
         "tooltip": true,
-        "on-click": "~/.config/hypr/scripts/brightness_waybar.sh",
-        "on-scroll-up": "~/.config/hypr/scripts/brightness_waybar.sh up",
-        "on-scroll-down": "~/.config/hypr/scripts/brightness_waybar.sh down"
+        "on-click": "~/.config/waybar/scripts/brightness_waybar.sh",
+        "on-scroll-up": "~/.config/waybar/scripts/brightness_waybar.sh up",
+        "on-scroll-down": "~/.config/waybar/scripts/brightness_waybar.sh down"
 
     }
 }

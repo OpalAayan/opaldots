@@ -155,11 +155,14 @@ window#waybar {
     /* Catppuccin Overlay2 */
     border-radius: 10px;
     transition: all 0.3s;
+    min-height: 16px;
+    min-width: 16px;
+
 }
 
 #workspaces button:hover {
     background-color: rgba(69, 71, 90, 0.4);
-    /* Catppuccin Surface0 */
+    /* Catppuccin Surface */
     color: #b4befe;
     /* Catppuccin Lavender */
     box-shadow: none;
@@ -178,6 +181,14 @@ window#waybar {
     /* Catppuccin Red */
     color: #1e1e2e;
     animation: pulse 1s ease-in-out infinite;
+}
+
+#workspaces button label {
+    /* If the icon looks too high, increase margin-top. 
+       If it looks too low, change it to margin-bottom: 1px; */
+    margin-top: 1px;
+    margin-left: 0px;
+    margin-right: 0.4px;
 }
 
 /* App Launcher */
@@ -229,25 +240,18 @@ window#waybar {
     color: #1e1e2e;
     font-size: 15px;
     border-radius: 150px;
-
-    /* BREAKING THE PADDING SHORTHAND */
-    /* Adjust these specific numbers to nudge the icon */
-    padding-left: 10px;
-    /* Tweak this to move icon Left/Right */
+    padding-left: 9px;
     padding-right: 12px;
-    /* Often icon fonts need 1-2px extra on the right */
     padding-top: 0px;
-    /* Tweak this to move icon Up/Down */
-    padding-bottom: 1px;
-    /* Sometimes 1px here lifts the icon visually */
-
-    margin: 4px 6px 4px 4px;
+    padding-bottom: 0px;
+    margin: 4px 1px 4px 4px;
     box-shadow: 0 0 0px rgba(243, 139, 168, 0.5);
 }
 
 #custom-power:hover {
     background-color: #f5c2e7;
     box-shadow: 0 0 12px rgba(243, 139, 168, 0.7);
+
 }
 
 
@@ -267,28 +271,27 @@ window#waybar {
 
 /* Brightness */
 #custom-brightness {
-   color: #f9e2af; /* Catppuccin Yellow - Like a soft sun */
+    color: #f9e2af;
+    /* Catppuccin Yellow - Like a soft sun */
     font-size: 16px;
     padding: 0 6px;
 }
 
 #custom-brightness:hover {
-  color: #f5c2e7; /* Catppuccin Pink - Super sweet hover effect */
+    color: #f5c2e7;
+    /* Catppuccin Pink - Super sweet hover effect */
 }
 
 /* -----------------------------------------------------
  * Right Modules Group: Network, Bluetooth, Audio, Battery
  * ----------------------------------------------------- */
 
-/* Shared spacing - TIGHTER NOW */
 #network,
 #bluetooth,
 #pulseaudio,
 #battery {
     padding: 0 6px;
-    /* Reduced from 12px to 6px */
     margin: 0;
-    /* Removed background/shadow hover effects to fix "boxy" look */
 }
 
 /* --- Network --- */
@@ -306,6 +309,11 @@ window#waybar {
 #bluetooth {
     color: #89b4fa;
     /* Catppuccin Blue */
+    font-size: 13px;
+    padding-left: 6px;
+    padding-right: 0px;
+    margin-right: -1px;
+    margin-top: -1px;
 }
 
 #bluetooth.disabled,
@@ -334,7 +342,6 @@ window#waybar {
     /* Catppuccin Green */
 }
 
-/* Kept the charging animation (it's cool), but removed the boxy pulse */
 #battery.charging,
 #battery.plugged {
     color: #94e2d5;

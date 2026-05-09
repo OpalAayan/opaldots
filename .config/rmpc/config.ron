@@ -4,8 +4,8 @@
 (
     address: "127.0.0.1:6600",
     password: None,
-    theme: Some("theme"), // Linked to theme.ron
-    cache_dir: None,
+    theme:"custom",
+    cache_dir: "~/.cache/rmpc",
     on_song_change: None,
     volume_step: 5,
     max_fps: 60,
@@ -15,43 +15,45 @@
     enable_config_hot_reload: true,
     status_update_interval_ms: 1000,
     rewind_to_start_sec: None,
-    keep_state_on_song_change: true,
     reflect_changes_to_playlist: false,
     select_current_song_on_change: false,
-    ignore_leading_the: false,
     browser_song_sort: [Disc, Track, Artist, Title],
     directories_sort: SortFormat(group_by_type: true, reverse: false),
-    
-    // --- ALBUM ART SETTINGS ---
+
+      // --- ALBUM ART SETTINGS ---
     album_art: (
         method: Auto,
-        order: EmbeddedFirst,
         max_size_px: (width: 1200, height: 1200),
         disabled_protocols: ["http://", "https://"],
-        vertical_align: Top,
+        vertical_align: Center,
         horizontal_align: Center,
     ),
 
     // --- CAVA BACKEND ---
     cava: (
-        framerate: 60,
-        autosens: true,
-        input: (
-            method: Fifo,
-            source: "/tmp/mpd.fifo",
-            sample_rate: 44100,
-            channels: 2,
-            sample_bits: 16,
-        ),
-        smoothing: (
-            noise_reduction: 77,
-            monstercat: false,
-            waves: false,
-        ),
-        // Ensures backend initializes correctly
-        eq: [],
+    framerate: 60, // default 60
+    autosens: true, // default true
+    sensitivity: 100, // default 100
+    lower_cutoff_freq: 50, // not passed to cava if not provided
+    higher_cutoff_freq: 10000, // not passed to cava if not provided
+    input: (
+        method: Fifo,
+        source: "/tmp/mpd.fifo",
+        sample_rate: 44100,
+        channels: 2,
+        sample_bits: 16,
     ),
-
+    smoothing: (
+        noise_reduction: 77, // default 77
+        monstercat: false, // default false
+        waves: false, // default false
+    ),
+    // this is a list of floating point numbers thats directly passed to cava
+    // they are passed in order that they are defined
+    eq: [],
+    ),
+  
+  
     keybinds: (
         global: {
             ":":       CommandMode,
@@ -89,8 +91,8 @@
             "<Right>": SeekForward,
         },
         navigation: {
-            "k":         Up,
-            "j":         Down,
+            "j":         Up,
+            "k":         Down,
             "h":         Left,
             "l":         Right,
             "<Up>":      Up,
@@ -130,10 +132,9 @@
             "X":       Shuffle,
         },
     ),
+
     search: (
         case_sensitive: false,
-        ignore_diacritics: false,
-        search_button: false,
         mode: Contains,
         tags: [
             (value: "any",         label: "Any Tag"),
@@ -148,9 +149,8 @@
     artists: (
         album_display_mode: SplitByDate,
         album_sort_by: Date,
-        album_date_tags: [Date],
     ),
-    tabs: [
+      tabs: [
         (
             name: "Queue",
             pane: Split(
