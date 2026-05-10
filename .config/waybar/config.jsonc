@@ -3,32 +3,34 @@
         "~/.config/waybar/modules.json"
     ],
     // -------------------------------------------------------------------------
-    // Global Configuration
+    // Global Configuration — Optimized for 14" screens
     // -------------------------------------------------------------------------
     "layer": "top",
     "position": "top",
-    "height": 32,
+    "height": 30,
     "spacing": 4,
     // -------------------------------------------------------------------------
-    // Module Placement (with new modules)
+    // Module Placement — Logical Grouping for Lucid Badge Aesthetic
     // -------------------------------------------------------------------------
+    // LEFT: Launcher anchor + System performance cluster
     "modules-left": [
         "custom/launcher",
-        "disk",
-        "memory",
         "cpu",
+        "memory",
+        "disk",
         "temperature"
+        //,"custom/picker"
     ],
+    // CENTER: Workspace navigation (untouched)
     "modules-center": [
-        "custom/picker",
+        "hyprland/workspaces"
+    ],
+    // RIGHT: Time context → Controls → Connectivity → Power
+    "modules-right": [
+        //,"custom/powerpfp"
         "custom/newday",
         "clock#date",
         "custom/dynamic_clock",
-        //"clock#time",
-        "custom/powerpfp"
-    ],
-    "modules-right": [
-        "hyprland/workspaces",
         "custom/nightlight",
         "custom/brightness",
         "network",

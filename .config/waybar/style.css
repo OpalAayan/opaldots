@@ -1,8 +1,27 @@
-/* -----------------------------------------------------
- * Waybar Style - Dracula + Catppuccin Theme
- * Compact & Vibrant
- * ----------------------------------------------------- */
+/* =============================================================================
+ * Waybar Style — "Lucid Badge" Aesthetic
+ * Dracula + Catppuccin Mocha Theme
+ * Optimized for 14" displays with glass-pill neon-rim badges
+ * =============================================================================
+ * COLOR PALETTE REFERENCE:
+ *   Catppuccin Blue (Sapphire):  #89b4fa   — Launcher, Workspaces active
+ *   Catppuccin Mauve:            #cba6f7   — CPU, Nightlight
+ *   Catppuccin Green:            #a6e3a1   — Memory, Battery
+ *   Catppuccin Yellow:           #f9e2af   — Disk, Brightness, Battery warning
+ *   Catppuccin Sky:              #89dceb   — Temperature
+ *   Catppuccin Teal:             #94e2d5   — Network, Clock, Battery charging
+ *   Catppuccin Peach:            #fab387   — Pulseaudio
+ *   Catppuccin Red:              #f38ba8   — Criticals, Urgent, Power
+ *   Catppuccin Lavender:         #b4befe   — Accents, Newday
+ *   Catppuccin Pink:             #f5c2e7   — Picker, Hover accents
+ *   Dracula BG:                  #282a36   — Island background
+ *   Glass Base:                  rgba(69, 71, 90, 0.3)
+ * ============================================================================= */
 
+
+/* -----------------------------------------------------------------------------
+ * § GLOBAL RESET
+ * -------------------------------------------------------------------------- */
 * {
     border: none;
     border-radius: 0;
@@ -10,375 +29,552 @@
     font-size: 13px;
     font-weight: bold;
     min-height: 0;
+    /* GTK3: margin/padding reset handled per-widget to avoid inheritance bugs */
 }
 
+
+/* -----------------------------------------------------------------------------
+ * § WAYBAR WINDOW
+ * -------------------------------------------------------------------------- */
 window#waybar {
     background: transparent;
-    color: #cdd6f4;
-    /* Catppuccin Text */
+    color: #cdd6f4;   /* Catppuccin Text */
 }
 
-/* Island containers */
+
+/* -----------------------------------------------------------------------------
+ * § ISLAND CONTAINERS — Ultra-compact for 14" screens
+ * Max 1-2px vertical margin. No excess padding.
+ * -------------------------------------------------------------------------- */
 .modules-left,
 .modules-center,
 .modules-right {
-    background-color: rgba(40, 42, 54, 0.9);
-    /* Dracula Background */
-    border: 1px solid rgba(180, 190, 254, 0.5);
-    /* Catppuccin Lavender */
-    margin: 3px 6px;
-    padding: 1px 10px;
-    border-radius: 20px;
-    box-shadow: 0px 0px 5px rgb(255, 255, 255);
-    /* Softer White Glow */
+    background-color: rgba(40, 42, 54, 0.85); /* make it transparent when needed  ~ shell it with a bind*/
+    border: 1px solid rgba(180, 190, 254, 0.25); 
+    margin: 1px 4px;
+    padding: 0px 4px;
+    border-radius: 14px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4),
+                inset 0 1px rgba(255, 255, 255, 0.06);
 }
 
-/* Center Island Modules */
-/* .modules-center {
-        background-color: transparent;
-        margin: 3px 6px;
-        padding: 1px 10px;
-        border-radius: 20px;
-        border: 1px solid transparent; 
-         box-shadow: none;  No glow 
-    } */
 
-/* All module base styles */
-#memory,
-#temperature,
+/* -----------------------------------------------------------------------------
+ * § BASE MODULE STYLES — Lucid Badge Foundation
+ * Every interactive module gets the glass-pill treatment.
+ * -------------------------------------------------------------------------- */
 #cpu,
+#memory,
 #disk,
-#bluetooth,
-#battery,
-#custom-launcher,
-#custom-power,
-#clock-date,
-#clock-time,
+#temperature,
 #network,
+#bluetooth,
 #pulseaudio,
-#workspaces,
-#custom-picker,
-#custom-powerpfp,
+#battery,
+#clock.date,
+#custom-dynamic_clock,
 #custom-nightlight,
 #custom-brightness,
+#custom-picker,
+#custom-powerpfp,
 #custom-newday {
-    padding: 0 8px;
-    background: transparent;
-}
-
-/* Clock and Date modules */
-#custom-dynamic_clock {
-    /*font-family: "Sleek Clock Final", "JetBrainsMono Nerd Font";*/
-    /*font-size: 20px;*/
-    /*color:  #94e2d5;*/
-    margin-left: 6px;
-    padding: 0;
-    background: transparent;
-}
-
-#clock-date {
-    /*color: #94e2d5;*/
-    /* Catppuccin Teal */
-    /* white is better*/
-    margin-left: 6px;
-    padding: 0;
-    background: transparent;
+    padding: 0 7px;
+    margin: 2px 2px;
+    border-radius: 10px;
+    background-color: rgba(69, 71, 90, 0.3);     /* Glass base */
+    /* Default badge shadow: subtle neutral rim */
+    box-shadow: inset 0 -2px rgba(205, 214, 244, 0.15),
+                inset 0 1px rgba(255, 255, 255, 0.10),
+                0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease,
+                box-shadow 0.3s ease;
 }
 
 
-/* --- New Day Alert --- */
-#custom-newday {
-    background-color: #b4befe;
-    /* Lavender background */
-    color: #1e1e2e;
-    /* Dark text for contrast */
-    border-radius: 12px;
-    padding: 0 10px;
-    margin-right: 5px;
-    /* Space between alert and date */
-    font-weight: bold;
+/* =============================================================================
+ * § MODULE-SPECIFIC BADGE COLORS
+ * Each module gets its own neon bottom rim using the Lucid Badge spec.
+ * ============================================================================= */
+
+/* --- CPU — Mauve #cba6f7 --- */
+#cpu {
+    color: #cba6f7;
+    box-shadow: inset 0 -2px #cba6f7,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(203, 166, 247, 0.1);
+}
+#cpu:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #cba6f7,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(203, 166, 247, 0.25);
 }
 
-/* Reusing your existing blink animation for the flash effect */
-#custom-newday.alert {
-    animation: blink 0.5s linear infinite;
-    box-shadow: 0 0 10px rgba(180, 190, 254, 0.8);
-    /* Glow effect */
-}
-
-/* Disk module */
-#disk {
-    color: #f9e2af;
-    /* Catppuccin Yellow */
-}
-
-/* Memory module */
+/* --- Memory — Green #a6e3a1 --- */
 #memory {
     color: #a6e3a1;
-    /* Catppuccin Green */
+    box-shadow: inset 0 -2px #a6e3a1,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(166, 227, 161, 0.1);
 }
-
+#memory:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #a6e3a1,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(166, 227, 161, 0.25);
+}
 #memory.critical {
     color: #f38ba8;
-    /* Catppuccin Red */
+    background-color: rgba(243, 139, 168, 0.15);
+    box-shadow: inset 0 -3px #f38ba8,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 8px rgba(243, 139, 168, 0.3);
     animation: blink 0.7s linear infinite;
 }
 
-/* Temperature module */
-#temperature {
-    color: #89dceb;
-    /* Catppuccin Sky */
+/* --- Disk — Yellow #f9e2af --- */
+#disk {
+    color: #f9e2af;
+    box-shadow: inset 0 -2px #f9e2af,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(249, 226, 175, 0.1);
+}
+#disk:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #f9e2af,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(249, 226, 175, 0.25);
 }
 
+/* --- Temperature — Sky #89dceb --- */
+#temperature {
+    color: #89dceb;
+    box-shadow: inset 0 -2px #89dceb,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(137, 220, 235, 0.1);
+}
+#temperature:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #89dceb,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(137, 220, 235, 0.25);
+}
 #temperature.critical {
     color: #f38ba8;
-    /* Catppuccin Red */
+    background-color: rgba(243, 139, 168, 0.15);
+    box-shadow: inset 0 -3px #f38ba8,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 8px rgba(243, 139, 168, 0.3);
     animation: pulse 1s ease-in-out infinite;
 }
 
-/* CPU module */
-#cpu {
-    color: #cba6f7;
-    /* Catppuccin Mauve */
+
+/* =============================================================================
+ * § RIGHT PANEL MODULES
+ * ============================================================================= */
+
+/* --- New Day Alert — Lavender #b4befe --- */
+#custom-newday {
+    color: #1e1e2e;
+    background-color: #b4befe;
+    font-weight: bold;
+    box-shadow: inset 0 -2px rgba(30, 30, 46, 0.3),
+                inset 0 1px rgba(255, 255, 255, 0.25),
+                0 2px 4px rgba(180, 190, 254, 0.2);
+}
+#custom-newday.alert {
+    animation: badge-pulse-lavender 1s linear infinite;
 }
 
-/* Workspace styling */
+/* --- Clock Date — Teal #94e2d5 --- */
+#clock.date {
+    color: #cdd6f4;
+    box-shadow: inset 0 -2px #94e2d5,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(148, 226, 213, 0.1);
+}
+#clock.date:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #94e2d5,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(148, 226, 213, 0.25);
+}
+
+/* --- Dynamic Clock — Teal #94e2d5 --- */
+#custom-dynamic_clock {
+    color: #cdd6f4;
+    box-shadow: inset 0 -2px #94e2d5,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(148, 226, 213, 0.1);
+}
+#custom-dynamic_clock:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #94e2d5,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(148, 226, 213, 0.25);
+}
+
+/* --- Night Light — Mauve #cba6f7 --- */
+#custom-nightlight {
+    padding: 0 8px 0 6px;
+    color: #cba6f7;
+    font-size: 16px;
+    box-shadow: inset 0 -2px #cba6f7,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(203, 166, 247, 0.1);
+}
+#custom-nightlight:hover {
+    color: #fab387;
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #fab387,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(250, 179, 135, 0.25);
+}
+
+/* --- Brightness — Yellow #f9e2af --- */
+#custom-brightness {
+    color: #f9e2af;
+    font-size: 16px;
+    padding: 0 9px 0 5px;
+    box-shadow: inset 0 -2px #f9e2af,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(249, 226, 175, 0.1);
+}
+#custom-brightness:hover {
+    color: #f5c2e7;
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #f5c2e7,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(245, 194, 231, 0.25);
+}
+
+/* --- Network — Teal #94e2d5 --- */
+#network {
+    color: #94e2d5;
+    padding: 0 9px 0 5px;
+    box-shadow: inset 0 -2px #94e2d5,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(148, 226, 213, 0.1);
+}
+#network:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #94e2d5,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(148, 226, 213, 0.25);
+}
+#network.disconnected {
+    color: #f38ba8;
+    box-shadow: inset 0 -2px #f38ba8,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(243, 139, 168, 0.1);
+}
+
+/* --- Bluetooth — Blue #89b4fa --- */
+#bluetooth {
+    color: #89b4fa;
+    padding: 0 7px 0 6px;
+    font-size: 13px;
+    box-shadow: inset 0 -2px #89b4fa,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(137, 180, 250, 0.1);
+}
+#bluetooth:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #89b4fa,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(137, 180, 250, 0.25);
+}
+#bluetooth.disabled,
+#bluetooth.off {
+    color: #6c7086;
+    box-shadow: inset 0 -2px rgba(108, 112, 134, 0.3),
+                inset 0 1px rgba(255, 255, 255, 0.08),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Pulseaudio — Peach #fab387 --- */
+#pulseaudio {
+    color: #fab387;
+    box-shadow: inset 0 -2px #fab387,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(250, 179, 135, 0.1);
+}
+#pulseaudio:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #fab387,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(250, 179, 135, 0.25);
+}
+#pulseaudio.muted {
+    color: #6c7086;
+    box-shadow: inset 0 -2px rgba(108, 112, 134, 0.3),
+                inset 0 1px rgba(255, 255, 255, 0.08),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Battery — Green #a6e3a1 --- */
+#battery {
+    color: #a6e3a1;
+    box-shadow: inset 0 -2px #a6e3a1,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(166, 227, 161, 0.1);
+}
+#battery:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #a6e3a1,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(166, 227, 161, 0.25);
+}
+#battery.charging,
+#battery.plugged {
+    color: #94e2d5;
+    box-shadow: inset 0 -2px #94e2d5,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(148, 226, 213, 0.15);
+    animation: blink 2s ease-in-out infinite;
+}
+#battery.warning {
+    color: #f9e2af;
+    box-shadow: inset 0 -2px #f9e2af,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(249, 226, 175, 0.15);
+}
+#battery.critical {
+    color: #f38ba8;
+    background-color: rgba(243, 139, 168, 0.15);
+    box-shadow: inset 0 -3px #f38ba8,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 8px rgba(243, 139, 168, 0.3);
+    animation: blink 0.7s linear infinite;
+}
+
+
+/* =============================================================================
+ * § SPECIAL MODULES — Non-badge or unique styling
+ * ============================================================================= */
+
+/* --- App Launcher (Ghost) --- */
+#custom-launcher {
+    background-color: rgba(69, 71, 90, 0.3); /* Glass base */
+    color: #89b4fa; /* Catppuccin Blue */
+    font-size: 16px; /* Kept your larger font size for the ghost */
+    border-radius: 10px;
+    margin: 2px 2px;
+    padding: 0 13px 0 9px; /* Tweak these left/right numbers to perfectly center the ghost */
+    box-shadow: inset 0 -2px #89b4fa,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(137, 180, 250, 0.1);
+    transition: background-color 0.3s ease,
+                box-shadow 0.3s ease,
+                color 0.3s ease;
+}
+
+#custom-launcher:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    color: #cba6f7; /* Pops to mauve on hover */
+    box-shadow: inset 0 -2px #cba6f7,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(203, 166, 247, 0.25);
+}
+
+/* --- Color Picker — Standalone icon --- */
+#custom-picker {
+    color: #f5c2e7;
+    font-size: 16px;
+}
+#custom-picker:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    box-shadow: inset 0 -2px #f5c2e7,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(245, 194, 231, 0.25);
+}
+
+/* --- Power Profile — Dynamic class-based coloring --- */
+#custom-powerpfp {
+    font-size: 16px;
+    transition: background-color 0.3s ease,
+                box-shadow 0.3s ease,
+                color 0.3s ease;
+}
+#custom-powerpfp.power-saver {
+    color: #a6e3a1;
+    box-shadow: inset 0 -2px #a6e3a1,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(166, 227, 161, 0.1);
+}
+#custom-powerpfp.balanced {
+    color: #ffcc5e;
+    box-shadow: inset 0 -2px #ffcc5e,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(255, 204, 94, 0.1);
+}
+#custom-powerpfp.performance {
+    color: #f38ba8;
+    box-shadow: inset 0 -2px #f38ba8,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(243, 139, 168, 0.1);
+}
+
+/* --- Power Button — Full Lucid Badge Treatment --- */
+#custom-power {
+    background-color: rgba(69, 71, 90, 0.3); /* Glass base */
+    color: #f38ba8; /* Catppuccin Red */
+    font-size: 14px;
+    border-radius: 10px;
+    margin: 2px 2px;
+    padding: 0 13px 0 9px; 
+    box-shadow: inset 0 -2px #f38ba8,
+                inset 0 1px rgba(255, 255, 255, 0.15),
+                0 2px 4px rgba(243, 139, 168, 0.1);
+    transition: background-color 0.3s ease,
+                box-shadow 0.3s ease,
+                color 0.3s ease;
+}
+
+#custom-power:hover {
+    background-color: rgba(69, 71, 90, 0.5);
+    color: #f5c2e7; /* Pops to pink on hover */
+    box-shadow: inset 0 -2px #f5c2e7,
+                inset 0 1px rgba(255, 255, 255, 0.20),
+                0 2px 8px rgba(245, 194, 231, 0.25);
+}
+
+/* =============================================================================
+ * § WORKSPACE BUTTONS — Full Lucid Badge treatment
+ * ============================================================================= */
 #workspaces {
     padding: 0 2px;
 }
 
 #workspaces button {
     padding: 0 7px;
-    margin: 0 3px;
-    background: transparent;
-    color: #9399b2;
-    /* Catppuccin Overlay2 */
+    margin: 2px 2px;
+    background-color: rgba(69, 71, 90, 0.3);       /* Glass base */
+    color: #9399b2;                                 /* Catppuccin Overlay2 */
     border-radius: 10px;
-    transition: all 0.3s;
     min-height: 16px;
     min-width: 16px;
-
+    border: none;
+    /* Pre-declare all 3 shadow layers for smooth GTK transition */
+    box-shadow: inset 0 -2px rgba(147, 153, 178, 0.2),
+                inset 0 1px rgba(255, 255, 255, 0.08),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #workspaces button:hover {
-    background-color: rgba(69, 71, 90, 0.4);
-    /* Catppuccin Surface */
+    background-color: rgba(69, 71, 90, 0.5);
     color: #b4befe;
-    /* Catppuccin Lavender */
-    box-shadow: none;
+    box-shadow: inset 0 -2px rgba(180, 190, 254, 0.4),
+                inset 0 1px rgba(255, 255, 255, 0.12),
+                0 2px 6px rgba(180, 190, 254, 0.15);
 }
 
 #workspaces button.active {
-    background-color: #89b4fa;
-    /* Catppuccin Blue */
-    color: #1e1e2e;
-    /* Catppuccin Base */
-    box-shadow: 0 0 6px rgba(137, 180, 250, 0.6);
+    background-color: rgba(137, 180, 250, 0.2);    /* Blue-tinted glass */
+    color: #89b4fa;
+    /* Active badge: -3px thick neon crescent + strong glow */
+    box-shadow: inset 0 -3px #89b4fa,
+                inset 0 1px rgba(255, 255, 255, 0.2),
+                0 2px 8px rgba(137, 180, 250, 0.4);
 }
 
 #workspaces button.urgent {
-    background-color: #f38ba8;
-    /* Catppuccin Red */
-    color: #1e1e2e;
-    animation: pulse 1s ease-in-out infinite;
+    background-color: rgba(243, 139, 168, 0.2);
+    color: #f38ba8;
+    animation: badge-pulse-red 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 #workspaces button label {
-    /* If the icon looks too high, increase margin-top. 
-       If it looks too low, change it to margin-bottom: 1px; */
-    margin-top: 1px;
-    margin-left: 0px;
-    margin-right: 0.4px;
-}
-
-/* App Launcher */
-#custom-launcher {
-    color: #89b4fa;
-    /* Catppuccin Blue */
-    font-size: 18px;
-    padding: 0 10px 0 4px;
-}
-
-#custom-launcher:hover {
-    color: #cba6f7;
-    /* Catppuccin Mauve */
-}
-
-/* Color Picker */
-#custom-picker {
-    color: #e59bd2;
-    /* Catppuccin Pink */
-    font-size: 16px;
-}
-
-
-/* Power Profile */
-#custom-powerpfp {
-    font-size: 16px;
-    padding-left: 10px;
-    padding-right: 10px;
-    transition: all 0.3s ease-in-out;
-}
-
-#custom-powerpfp.power-saver {
-    color: #a6e3a1;
-    /* Catppuccin Green */
-}
-
-#custom-powerpfp.balanced {
-    color: #ffcc5e;
-    /* Fuckputin Yellow */
-}
-
-#custom-powerpfp.performance {
-    color: #f38ba8;
-    /* Catppuccin Red */
-}
-
-#custom-power {
-    background-color: #ff2160;
-    color: #1e1e2e;
-    font-size: 15px;
-    border-radius: 150px;
-    padding-left: 9px;
-    padding-right: 12px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin: 4px 1px 4px 4px;
-    box-shadow: 0 0 0px rgba(243, 139, 168, 0.5);
-}
-
-#custom-power:hover {
-    background-color: #f5c2e7;
-    box-shadow: 0 0 12px rgba(243, 139, 168, 0.7);
-
-}
-
-
-
-/* Night Light */
-#custom-nightlight {
-    color: #cba6f7;
-    /* Catppuccin Mauve (Purple) */
-    font-size: 16px;
-    padding: 0 6px;
-}
-
-#custom-nightlight:hover {
-    color: #fab387;
-    /* Catppuccin Peach */
-}
-
-/* Brightness */
-#custom-brightness {
-    color: #f9e2af;
-    /* Catppuccin Yellow - Like a soft sun */
-    font-size: 16px;
-    padding: 0 6px;
-}
-
-#custom-brightness:hover {
-    color: #f5c2e7;
-    /* Catppuccin Pink - Super sweet hover effect */
-}
-
-/* -----------------------------------------------------
- * Right Modules Group: Network, Bluetooth, Audio, Battery
- * ----------------------------------------------------- */
-
-#network,
-#bluetooth,
-#pulseaudio,
-#battery {
-    padding: 0 6px;
+    /* Vertical centering fix — no extra margin on label */
     margin: 0;
+    padding: 0;
 }
 
-/* --- Network --- */
-#network {
-    color: #94e2d5;
-    /* Catppuccin Teal */
-}
 
-#network.disconnected {
-    color: #f38ba8;
-    /* Catppuccin Red */
-}
+/* =============================================================================
+ * § ANIMATIONS — GTK3-Safe (no comma-separated keyframe selectors)
+ * ============================================================================= */
 
-/* --- Bluetooth --- */
-#bluetooth {
-    color: #89b4fa;
-    /* Catppuccin Blue */
-    font-size: 13px;
-    padding-left: 6px;
-    padding-right: 0px;
-    margin-right: -1px;
-    margin-top: -1px;
-}
-
-#bluetooth.disabled,
-#bluetooth.off {
-    color: #6c7086;
-    /* Catppuccin Subtext0 */
-}
-
-/* --- Audio --- */
-#pulseaudio {
-    color: #fab387;
-    /* Catppuccin Peach */
-    /* If you want the power button closer to audio, 
-       add a negative margin to the right of audio */
-    margin-right: -2px;
-}
-
-#pulseaudio.muted {
-    color: #6c7086;
-    /* Catppuccin Subtext0 */
-}
-
-/* --- Battery --- */
-#battery {
-    color: #a6e3a1;
-    /* Catppuccin Green */
-}
-
-#battery.charging,
-#battery.plugged {
-    color: #94e2d5;
-    animation: blink 2s ease-in-out infinite;
-    /* Simple blink instead of pulse */
-}
-
-#battery.warning {
-    color: #f9e2af;
-    /* Catppuccin Yellow */
-}
-
-#battery.critical {
-    color: #f38ba8;
-    /* Catppuccin Red */
-    animation: blink 0.7s linear infinite;
-}
-
-/* -----------------------------------------------------
- * Animations
- * ----------------------------------------------------- */
+/* --- Blink: Opacity fade for charging/critical states --- */
 @keyframes blink {
-    to {
-        background-color: transparent;
-        /* Removed bg to avoid boxiness */
-        opacity: 0.5;
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 1.0;
     }
 }
 
-/* -----------------------------------------------------
- * Tooltips
- * ----------------------------------------------------- */
+/* --- Pulse: Box-shadow swell for temperature critical --- */
+@keyframes pulse {
+    0% {
+        box-shadow: inset 0 -3px #f38ba8,
+                    inset 0 1px rgba(255, 255, 255, 0.15),
+                    0 2px 4px rgba(243, 139, 168, 0.1);
+    }
+    50% {
+        box-shadow: inset 0 -3px #f38ba8,
+                    inset 0 1px rgba(255, 255, 255, 0.15),
+                    0 2px 12px rgba(243, 139, 168, 0.5);
+    }
+    100% {
+        box-shadow: inset 0 -3px #f38ba8,
+                    inset 0 1px rgba(255, 255, 255, 0.15),
+                    0 2px 4px rgba(243, 139, 168, 0.1);
+    }
+}
+
+/* --- Badge Pulse (Red): Urgent workspace glow --- */
+@keyframes badge-pulse-red {
+    0% {
+        box-shadow: inset 0 -3px #f38ba8,
+                    inset 0 1px rgba(255, 255, 255, 0.2),
+                    0 0 0 transparent;
+    }
+    50% {
+        box-shadow: inset 0 -3px #f38ba8,
+                    inset 0 1px rgba(255, 255, 255, 0.2),
+                    0 2px 10px rgba(243, 139, 168, 0.6);
+    }
+    100% {
+        box-shadow: inset 0 -3px #f38ba8,
+                    inset 0 1px rgba(255, 255, 255, 0.2),
+                    0 0 0 transparent;
+    }
+}
+
+/* --- Badge Pulse (Lavender): New day alert glow --- */
+@keyframes badge-pulse-lavender {
+    0% {
+        box-shadow: inset 0 -2px rgba(30, 30, 46, 0.3),
+                    inset 0 1px rgba(255, 255, 255, 0.25),
+                    0 0 0 transparent;
+    }
+    50% {
+        box-shadow: inset 0 -2px rgba(30, 30, 46, 0.3),
+                    inset 0 1px rgba(255, 255, 255, 0.25),
+                    0 2px 12px rgba(180, 190, 254, 0.7);
+    }
+    100% {
+        box-shadow: inset 0 -2px rgba(30, 30, 46, 0.3),
+                    inset 0 1px rgba(255, 255, 255, 0.25),
+                    0 0 0 transparent;
+    }
+}
+
+
+/* =============================================================================
+ * § TOOLTIPS — Glass panel with accent border
+ * ============================================================================= */
 tooltip {
-    background-color: rgba(40, 42, 54, 0.95);
-    /* Dracula Background */
-    border: 2px solid #b4befe;
-    /* Catppuccin Lavender */
+    background-color: rgba(40, 42, 54, 0.95);      /* Dracula BG */
+    border: 2px solid #b4befe;                       /* Catppuccin Lavender */
     border-radius: 12px;
     padding: 0;
     margin: 0;
@@ -407,8 +603,8 @@ tooltip * {
     padding: 0;
 }
 
-/* Clock/Date specific override */
-#clock-date tooltip {
+/* Clock/Date tooltip override — Peach accent */
+#clock.date tooltip {
     background-color: #1e1e2e;
     border: 2px solid #fab387;
 }

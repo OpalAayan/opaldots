@@ -31,7 +31,7 @@
     },
     // --- App Launcher (Fuzzel) ---
     "custom/launcher": {
-        "format": "󰊠",
+        "format": "󱘊",
         "tooltip": true,
         "tooltip-format": "Fuzzle",
         "on-click": "fuzzel"
@@ -45,7 +45,7 @@
     },
     // --- Memory (Updated) ---
     "memory": {
-        "format": " {percentage}%",
+        "format": " {percentage}%",
         // "on-click": "kitty -e btop"
         "on-click": "~/.config/waybar/scripts/btop-floating.sh"
     },
@@ -63,28 +63,22 @@
         //"on-click": "kitty -e btop"
         "on-click": "~/.config/waybar/scripts/btop-floating.sh"
     },
-    // --- Workspaces ---
+// --- Workspaces ---
     "hyprland/workspaces": {
-        "format": "{icon}",
-        "on-click": "activate",
-        "format-icons": {
-            "1": "󰲠",
-            "2": "󰲢",
-            "3": "󰲤",
-            "4": "󰲦",
-            "5": "󰲨",
-            "6": "󰲪",
-            "7": "󰲬",
-            "8": "󰲮",
-            "9": "󰲰",
-            "10": "󰿬",
-            "default": ""
-        },
-        "persistent-workspaces": {
-            "*": 4
-        }
+    "format": "{name}",
+    "on-click": "activate",
+    "sort-by-number": true,
+    "persistent-workspaces": {
+        "*": 4
     },
-    // --- Date Module (as a clock instance) ---
+    "special-visible-only": false
+},
+
+// --- Special Workspace indicator (scratchpad) ---
+   // "hyprland/submap": {
+   // "format": " {}"   need somthing better
+//}, 
+  // --- Date Module (as a clock instance) ---
     "clock#date": {
         "format": " {:%a %d;%b}",
         "on-click": "gnome-calendar",
