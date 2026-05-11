@@ -10,7 +10,7 @@ import json
 
 # --- Configuration ---
 CACHE_DIR = os.path.expanduser("~/.cache/cliphist/thumbnails")
-RASI_FILE = os.path.expanduser("~/.config/rofi/clipboard.rasi")
+RASI_FILE = os.path.expanduser("~/.config/rofi/clipboard/clipboard.rasi")
 PINNED_FILE = os.path.expanduser("~/.cache/cliphist/pinned.json")
 TEXT_ICON = "text-x-generic"
 PIN_ICON = "<span foreground='#E59BD2' font='14'>󰐃 </span>"

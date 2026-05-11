@@ -49,7 +49,7 @@ window#waybar {
 .modules-left,
 .modules-center,
 .modules-right {
-    background-color: rgba(40, 42, 54, 0.85); /* make it transparent when needed  ~ shell it with a bind*/
+    background-color: transparent; /* make it transparent  or  rgba(40, 42, 54, 0.85) when needed  ~ shell it with a bind*/
     border: 1px solid rgba(180, 190, 254, 0.25); 
     margin: 1px 4px;
     padding: 0px 4px;
