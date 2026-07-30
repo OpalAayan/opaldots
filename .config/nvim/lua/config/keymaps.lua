@@ -15,6 +15,9 @@ map({ "n", "i" }, "<C-l>", "<Esc>V", { desc = "Select Line" })
 map("v", "<C-x>", '"+d', { desc = "Cut selection" })
 map("n", "<C-x>", '"+dd', { desc = "Cut line" })
 
+-- 3.5 x = true delete (black hole, no clipboard)
+map({ "n", "v" }, "x", '"_x', { desc = "Delete char (no clipboard)" })
+
 -- 4. Copy (CTRL + SHIFT + C)
 map("v", "<C-S-c>", '"+y', { desc = "Copy to system clipboard" })
 

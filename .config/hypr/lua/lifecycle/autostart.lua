@@ -6,58 +6,65 @@
 local v = require("lua.core.variables")
 
 hl.on("hyprland.start", function()
+	-- ── System Services ──
+	hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+	hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
 
-    -- ── System Services ──
-    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
-    hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
-    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
-    hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1")
+	-- ── Force GTK/Gnome Settings ──
+	hl.exec_cmd('gsettings set org.gnome.desktop.interface gtk-theme "Rosepine-Dark"')
+	hl.exec_cmd('gsettings set org.gnome.desktop.interface icon-theme "Tela-dracula"')
+	hl.exec_cmd('gsettings set org.gnome.desktop.interface cursor-theme "Bibata-Original-Ice"')
+	hl.exec_cmd('gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"')
 
-    -- ── Force GTK/Gnome Settings ──
-    hl.exec_cmd('gsettings set org.gnome.desktop.interface gtk-theme "Rosepine-Dark"')
-    hl.exec_cmd('gsettings set org.gnome.desktop.interface icon-theme "Tela-dracula"')
-    hl.exec_cmd('gsettings set org.gnome.desktop.interface cursor-theme "Bibata-Original-Ice"')
-    hl.exec_cmd('gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"')
+	-- ── Cursor ──
+	hl.exec_cmd("hyprctl setcursor Bibata-Original-Ice 24")
 
-    -- ── Nautilus Picker Hack ──
-    -- Systemd refuses to start this on Hyprland, so we bypass systemd
-    hl.exec_cmd("/usr/lib/xdg-desktop-portal-gnome")
+	-- ── Notification Daemon ──
+	hl.exec_cmd("dunst")
 
-    -- ── Cursor ──
-    hl.exec_cmd("hyprctl setcursor Bibata-Original-Ice 24")
+	-- ── Wallpaper ──
+	hl.exec_cmd("awww-daemon")
+	hl.exec_cmd("awww img " .. v.home .. "/Pictures/Wallpaper/kjj.png")
 
-    -- ── Notification Daemon ──
-    hl.exec_cmd("dunst")
+	-- ── Night Light Daemon ──
+	hl.exec_cmd("wl-gammarelay-rs")
 
-    -- ── Wallpaper ──
-    hl.exec_cmd("awww-daemon")
-    hl.exec_cmd("awww img " .. v.home .. "/Pictures/Wallpaper/kjj.png")
+	-- ── Status Bar ──
+	--hl.exec_cmd("waybar")
 
-    -- ── Night Light Daemon ──
-    hl.exec_cmd("wl-gammarelay-rs")
+	-- ── Clipboard Manager ──
+	hl.exec_cmd("wl-paste --type text --watch cliphist store")
+	hl.exec_cmd("wl-paste --type image --watch cliphist store")
 
-    -- ── Status Bar ──
-    hl.exec_cmd("waybar")
+	-- ── Dock ──
+	--	hl.exec_cmd("snappy-dock-gtk")
+	--	hl.exec_cmd(
+	--	"nwg-dock-hyprland -p bottom -i 44 -w 5 -mb 5 -l overlay"
+	--		.. ' -c "rofi -show drun -show-icons" -d -hd 1000 -lp start'
+	-- )
+	hl.exec_cmd("snappy-dock")
 
-    -- ── Clipboard Manager ──
-    hl.exec_cmd("wl-paste --type text --watch cliphist store")
-    hl.exec_cmd("wl-paste --type image --watch cliphist store")
+	-- ── Snappy Tools ──
+	hl.exec_cmd("snappy-switcher --daemon")
+	hl.exec_cmd("snappy-keys --daemon")
 
-    -- ── Dock ──
-    hl.exec_cmd(
-        "nwg-dock-hyprland -p bottom -i 44 -w 5 -mb 5 -l overlay"
-        .. ' -c "rofi -show drun -show-icons" -d -hd 1000 -lp start'
-    )
+	-- ── Wayscriber ──
+	hl.exec_cmd("wayscriber --daemon")
 
-    -- ── Snappy Tools ──
-    hl.exec_cmd("snappy-switcher --daemon")
-    hl.exec_cmd("snappy-keys --daemon")
+	-- ── Custom Sounds ──
+	hl.exec_cmd(v.script_dir .. "/usb-sound.sh")
+	hl.exec_cmd("aplay -q " .. v.home .. "/.local/share/sounds/Startup.wav")
 
-    -- ── Wayscriber ──
-    hl.exec_cmd("wayscriber --daemon")
+	-- --- QuickShell (Overview)
+	---  Bar ---
+	-- hl.exec_cmd("qs -c bar")
+	hl.exec_cmd("waybar")
+	-- hl.exec_cmd("qs -c overview")
 
-    -- ── Custom Sounds ──
-    hl.exec_cmd(v.script_dir .. "/usb-sound.sh")
-    hl.exec_cmd("aplay -q " .. v.home .. "/.local/share/sounds/Startup.wav")
+	-- --- Alt-tab ---
+	--hl.exec_cmd("hyprctl plugin load $HOME/GitCrubs/alttab/alttab.so")
 
+	-- --- Steam ---
+	-- hl.exec_cmd("steam")
+	--
 end)

@@ -20,8 +20,10 @@ hl.config({
 	-- ── Decoration ──
 	decoration = {
 		rounding = 11,
+		rounding_power = 2.0,
 		active_opacity = 1.0,
 		inactive_opacity = 0.8,
+		0,
 		blur = {
 			enabled = true,
 			size = 5,
@@ -37,7 +39,7 @@ hl.config({
 
 	-- ── Dwindle Layout ──
 	dwindle = {
-		-- pseudotile    = true,
+
 		preserve_split = true,
 	},
 
@@ -55,10 +57,24 @@ hl.config({
 		force_default_wallpaper = 0,
 		disable_hyprland_logo = false,
 		disable_splash_rendering = true,
+		initial_workspace_tracking = 0,
 	},
 
 	-- ── Binds ──
 	binds = {
 		scroll_event_delay = 0, -- snappy zooming
 	},
+
+	-- ── Plugin Settings ──
+	--	plugin = {
+	--		alttab = {
+	--			powersave = true,
+	--			dim = true,
+	--			dim_amount = 0.3,
+	--			blur = true,
+	--			carousel = {
+	--				size = 0.5,
+	--			},
+	--		},
+	--	},
 })

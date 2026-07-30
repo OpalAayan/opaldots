@@ -15,5 +15,16 @@ return {
         ]],
       },
     },
+    picker = {
+      sources = {
+        explorer = {
+          layout = {
+            layout = {
+              width = 25, -- Change this number to your preferred starting width
+            },
+          },
+        },
+      },
+    },
   },
 }

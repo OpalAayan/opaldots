@@ -1,0 +1,109 @@
+@theme "default"
+
+* {
+    /* Deep space violet-black for the main background */
+    bg: #090514aa; 
+    /* Muted dark purple for inactive buttons */
+    bg-alt: #1a102eaa; 
+    /* Glowing cosmic purple from the eyes */
+    accent: #8b5cf6aa; 
+    /* Off-white with a soft lavender tint */
+    text: #f8f4ff; 
+    
+    separatorcolor: transparent;
+    font: "JetBrainsMono Nerd Font 12";
+}
+
+configuration {
+    show-icons: false;
+}
+
+window {
+    transparency: "real";
+    width: 900px;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 15px;
+    padding: 0px;
+    background-color: @bg;
+}
+
+mainbox {
+    children: [ inputbar, listview, message ];
+    spacing: 0px;
+    padding: 0px;
+    background-color: transparent;
+}
+
+inputbar {
+    spacing: 10px;
+    padding: 20px 25px 180px 25px;
+    background-image: url("dvineeyes.png", width);
+    background-color: transparent;
+    children: [ textbox-prompt-colon, prompt ];
+}
+
+textbox-prompt-colon {
+    str: "󰐥 Power";
+    padding: 12px 18px;
+    border-radius: 12px;
+    background-color: @accent;
+    text-color: #ffffff;
+}
+
+prompt {
+    padding: 12px 18px;
+    border-radius: 12px;
+    background-color: @bg-alt;
+    text-color: @text;
+}
+
+listview {
+    columns: 5;
+    lines: 1;
+    fixed-columns: true;
+    fixed-height: true;
+    cycle: true;
+    dynamic: true;
+    spacing: 12px;
+    margin: 12px;
+    scrollbar: false;
+    background-color: transparent;
+}
+
+element {
+    padding: 25px 15px;
+    border-radius: 12px;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: @bg-alt;
+    text-color: @text;
+}
+
+element selected.normal {
+    background-color: @accent;
+    text-color: #ffffff;
+}
+
+element-text {
+    font: "JetBrainsMono Nerd Font 36";
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+    background-color: transparent;
+    text-color: inherit;
+}
+
+message {
+    padding: 12px;
+    background-color: @bg-alt;
+    text-color: @text;
+}
+
+textbox {
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+    background-color: transparent;
+    text-color: inherit;
+}

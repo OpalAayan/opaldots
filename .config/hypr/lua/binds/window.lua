@@ -6,7 +6,7 @@
 
 local smart_float = require("lua.utils.smart_float")
 local smart_split = require("lua.utils.smart_split")
-local smart_resize = require("lua.utils.smart_resize")
+--local smart_resize = require("lua.utils.smart_resize")
 
 --*================================================================*--
 --                    WINDOW MANAGEMENT                               --

@@ -61,7 +61,7 @@ case "$chosen" in
   systemctl suspend
   ;;
 "󰍃  Logout")
-  hyprctl dispatch exit
+  hyprctl dispatch 'hl.dispatch(hl.dsp.exit())'
   ;;
 "󰜉  Reboot")
   systemctl reboot
@@ -70,4 +70,3 @@ case "$chosen" in
   systemctl poweroff
   ;;
 esac
-

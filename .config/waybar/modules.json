@@ -31,10 +31,10 @@
     },
     // --- App Launcher (Fuzzel) ---
     "custom/launcher": {
-        "format": "󱘊",
+        "format": "",
         "tooltip": true,
-        "tooltip-format": "Fuzzle",
-        "on-click": "fuzzel"
+        "tooltip-format": "App Launcher",
+        "on-click": "rofi -show drun -show-icons"
     },
     // --- Disk Usage ---
     "disk": {
@@ -65,7 +65,9 @@
     },
 // --- Workspaces ---
     "hyprland/workspaces": {
+   // "ext/workspaces":{
     "format": "{name}",
+    "tooltip": false,
     "on-click": "activate",
     "sort-by-number": true,
     "persistent-workspaces": {
@@ -131,9 +133,9 @@
     // --- Network ---
     "network": {
         "format-wifi": "{icon}",
-        "format-ethernet": "󱥸", // Was . Set to 'loading' icon based on your report.
-        "format-linked": "󰖂", // Was 󱥸. Set to 'VPN connected' icon based on your report.
-        "format-vpn": "", // Was 󰖂. Set to 'ethernet' icon.
+        "format-ethernet": "󱥸", 
+        "format-linked": "󰖂",
+        "format-vpn": "", 
         "format-disconnected": "󰖪",
         "format-icons": [
             "󰤯",

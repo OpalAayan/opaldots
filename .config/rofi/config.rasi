@@ -12,7 +12,7 @@ configuration {
 }
 
 * {
-    font: "Montserrat Bold 11"; 
+    font: "FiraCode Nerd Font Bold 11"; 
 
     /* --- COLORS --- */
     bg0:  #1a1a1acc;   /* Dark blurry background */

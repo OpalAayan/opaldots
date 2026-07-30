@@ -24,6 +24,7 @@
     // CENTER: Workspace navigation (untouched)
     "modules-center": [
         "hyprland/workspaces"
+       // "ext/workspaces"
     ],
     // RIGHT: Time context → Controls → Connectivity → Power
     "modules-right": [

@@ -1,0 +1,70 @@
+/* AMOLED Monochrome — Maximum Compact */
+
+window {
+    background-color: #000000;
+    font-family: "Rubik", sans-serif;
+}
+
+/* Kill all default container padding causing the giant black gaps */
+box, grid, scrolledwindow, flowbox {
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Tighten the wallpaper preview grid spacing */
+flowboxchild {
+    padding: 3px;
+    margin: 0px;
+}
+
+/* Tiny, low-profile buttons and inputs */
+button, combobox, entry {
+    background-color: #0a0a0a;
+    color: #e0e0e0;
+    border: 1px solid #1f1f1f;
+    border-radius: 4px;
+    font-family: "Rubik", sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    box-shadow: none;
+    
+    padding: 2px 6px;
+    margin: 2px;
+    min-height: 0px;
+    min-width: 0px;
+}
+
+button:hover, combobox:hover, entry:focus {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
+
+button:hover > image {
+    -gtk-icon-effect: none;
+}
+
+label {
+    color: #777777;
+    font-family: "Rubik", sans-serif;
+    font-size: 11px;
+}
+
+flowboxchild:selected {
+    outline: 2px solid #ffffff;
+    outline-offset: -2px;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+.highlighted-button {
+    background-image: none;
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: none;
+}
+
+.highlighted-button > image,
+.highlighted-button:hover > image {
+    -gtk-icon-effect: none;
+}

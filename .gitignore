@@ -1,2 +1,13 @@
 *.log
 *.save
+.config/BraveSoftware
+.config/mozilla
+.config/pulse
+.config/go
+.config/mimeapps.list
+.config/pavucontrol.ini
+.config/gpu-screen-recorder
+.config/kdiskmark
+.config/evolution
+.config/dconf
+.config/quickshell/nixos-configuration
