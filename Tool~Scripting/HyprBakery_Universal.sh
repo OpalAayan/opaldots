@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # ╭─────────────────────────────────────────────────────────╮
-# │      🥧✨ ~(˘▾˘~) HYPR-BAKERY v3.5 (~˘▾˘)~ ✨🥧         │
+# │      🥧✨ ~(˘▾˘~) HYPR-BAKERY v4.0 (~˘▾˘)~ ✨🥧         │
 # │                  ~ Universal Edition ~                  │
 # │                                                         │
 # │  The Swiss Army Knife for Wallpapers! Made with 💖      │
@@ -13,7 +13,7 @@
 set -uo pipefail
 
 # ==================== CONSTANTS ====================
-readonly VERSION="3.5"
+readonly VERSION="4.0"
 readonly EDITION="Universal Edition"
 readonly SCRIPT_NAME="$(basename "$0")"
 readonly CPU_THREADS="$(nproc 2>/dev/null || echo 4)"
@@ -71,6 +71,11 @@ INTERACTIVE_MODE=true
 CONFLICT_MODE="merge"  # merge, wipe, backup
 RENAME_MODE="original" # original, sequential, random
 
+# Scope mode (new in v4.0)
+SCOPE_MODE=""            # "bundle" or "single"
+SINGLE_INPUT_FILE=""     # path for single-file mode
+SINGLE_SAVE_MODE=""      # "saveas" or "replace"
+
 # Video-specific globals
 BAKE_MODE="" # images, videos
 VIDEO_INPUT_EXT="mp4"
@@ -122,6 +127,7 @@ show_help() {
   echo -e "${BOLD}USAGE:${NC}"
   echo -e "    $SCRIPT_NAME [OPTIONS]"
   echo -e "    $SCRIPT_NAME --source <dir> --output <dir> --res <WxH> --mode <images|videos>"
+  echo -e "    $SCRIPT_NAME --single <file> --res <WxH> [--save-mode saveas|replace]"
   echo ""
   echo -e "${BOLD}OPTIONS:${NC}"
   echo -e "    ${CYAN}-s, --source${NC} <dir>        Source directory (default: \$PWD)"
@@ -131,6 +137,10 @@ show_help() {
   echo -e "    ${CYAN}-p, --preview${NC}             Preview mode (dry run)"
   echo -e "    ${CYAN}--conflict${NC} <mode>         Conflict handling: merge|wipe|backup"
   echo -e "    ${CYAN}--rename${NC} <mode>           Rename mode: original|sequential|random"
+  echo ""
+  echo -e "${BOLD}SINGLE-FILE OPTIONS:${NC}"
+  echo -e "    ${CYAN}--single${NC} <file>           Process a single image or video"
+  echo -e "    ${CYAN}--save-mode${NC} <mode>        Save mode: saveas|replace (default: saveas)"
   echo ""
   echo -e "${BOLD}VIDEO OPTIONS:${NC}"
   echo -e "    ${CYAN}--input-ext${NC} <ext>         Input video extension (default: mp4)"
@@ -145,6 +155,12 @@ show_help() {
   echo -e "${BOLD}EXAMPLES:${NC}"
   echo -e "    ${DIM}# Interactive mode${NC}"
   echo -e "    $SCRIPT_NAME"
+  echo ""
+  echo -e "    ${DIM}# Quick single-file resize${NC}"
+  echo -e "    $SCRIPT_NAME --single ~/wallpaper.jpg --res 1920x1080"
+  echo ""
+  echo -e "    ${DIM}# Single file, replace original${NC}"
+  echo -e "    $SCRIPT_NAME --single ~/wall.png --res 2560x1440 --save-mode replace"
   echo ""
   echo -e "    ${DIM}# Resize images from current directory${NC}"
   echo -e "    $SCRIPT_NAME -s . -o ./out -r 1920x1080 -m images"
@@ -163,7 +179,7 @@ show_version() {
 
 check_dependencies() {
   local missing=()
-  for cmd in ffmpeg ffprobe bc; do
+  for cmd in ffmpeg ffprobe; do
     if ! command -v "$cmd" &>/dev/null; then
       missing+=("$cmd")
     fi
@@ -172,9 +188,9 @@ check_dependencies() {
     log_err "Missing required tools: ${missing[*]}"
     echo ""
     echo -e "    ${DIM}Install with:${NC}"
-    echo -e "    ${CYAN}sudo pacman -S ffmpeg bc${NC}    ${DIM}(Arch)${NC}"
-    echo -e "    ${CYAN}sudo apt install ffmpeg bc${NC}  ${DIM}(Debian/Ubuntu)${NC}"
-    echo -e "    ${CYAN}sudo dnf install ffmpeg bc${NC}  ${DIM}(Fedora)${NC}"
+    echo -e "    ${CYAN}sudo pacman -S ffmpeg${NC}    ${DIM}(Arch)${NC}"
+    echo -e "    ${CYAN}sudo apt install ffmpeg${NC}  ${DIM}(Debian/Ubuntu)${NC}"
+    echo -e "    ${CYAN}sudo dnf install ffmpeg${NC}  ${DIM}(Fedora)${NC}"
     exit 1
   fi
 }
@@ -246,7 +262,313 @@ cleanup() {
 }
 
 generate_random_id() {
-  head -c 2 /dev/urandom | xxd -p
+  # Pure bash — 6 hex chars (~16M combos, no xxd/vim dep)
+  printf '%04x%02x' "$RANDOM" $(( RANDOM % 256 ))
+}
+
+# ==================== HISTORY MANAGEMENT ====================
+readonly BAKERY_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/hyprbakery"
+readonly BAKERY_HISTORY_FILE="$BAKERY_CACHE_DIR/path_history"
+
+_history_load() {
+  local -n _arr=$1
+  _arr=()
+  if [[ -f "$BAKERY_HISTORY_FILE" ]]; then
+    mapfile -t _arr < "$BAKERY_HISTORY_FILE"
+  fi
+}
+
+_history_save() {
+  local entry="$1"
+  [[ -z "$entry" ]] && return
+  mkdir -p "$BAKERY_CACHE_DIR"
+  { grep -vxF "$entry" "$BAKERY_HISTORY_FILE" 2>/dev/null || true; echo "$entry"; } | tail -100 > "${BAKERY_HISTORY_FILE}.tmp"
+  mv "${BAKERY_HISTORY_FILE}.tmp" "$BAKERY_HISTORY_FILE"
+}
+
+_history_match() {
+  local prefix="$1"
+  local -n _entries=$2
+  [[ -z "$prefix" ]] && return 1
+  local i
+  for (( i=${#_entries[@]}-1; i>=0; i-- )); do
+    if [[ "${_entries[i]}" == "$prefix"* && "${_entries[i]}" != "$prefix" ]]; then
+      echo "${_entries[i]}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# ==================== TAB COMPLETION ====================
+_rl_tab_complete() {
+  local input="$1"
+  local expanded="${input/#\~/$HOME}"
+
+  [[ -z "$expanded" ]] && expanded="./"
+
+  local -a matches
+  mapfile -t matches < <(compgen -f -- "$expanded" 2>/dev/null)
+
+  if [[ ${#matches[@]} -eq 0 ]]; then
+    return 1
+  fi
+
+  if [[ ${#matches[@]} -eq 1 ]]; then
+    local result="${matches[0]}"
+    [[ "$input" == "~"* ]] && result="~${result#$HOME}"
+    [[ -d "${matches[0]}" ]] && result="${result%/}/"
+    echo "$result"
+    return 0
+  fi
+
+  # Multiple matches: find longest common prefix
+  local common="${matches[0]}"
+  local m
+  for m in "${matches[@]}"; do
+    while [[ ${#common} -gt 0 && "${m:0:${#common}}" != "$common" ]]; do
+      common="${common:0:${#common}-1}"
+    done
+  done
+
+  [[ "$input" == "~"* ]] && common="~${common#$HOME}"
+
+  # Show available matches below the input line (to /dev/tty so it
+  # doesn't pollute the captured stdout return value)
+  {
+    printf '\n'
+    local count=0 base
+    for m in "${matches[@]}"; do
+      base=$(basename "$m")
+      [[ -d "$m" ]] && base+="/"
+      printf '  \033[2m%s\033[0m' "$base"
+      ((count++))
+      if [[ $count -ge 6 ]]; then
+        printf '  \033[2m...(+%d more)\033[0m' $(( ${#matches[@]} - count ))
+        break
+      fi
+    done
+    printf '\n'
+  } > /dev/tty
+
+  echo "$common"
+  return 2  # 2 = multiple matches shown
+}
+
+# ==================== READLINE INPUT ====================
+# readline_input <prompt> [default] [use_history] [use_completion]
+#
+# A tiny readline replacement that gives you:
+#   Backspace, Left/Right, Home/End, Delete, Ctrl+A/E/U/W
+#   Fish-style ghost-text autosuggestion from path_history
+#   Tab-completion for filesystem paths
+#
+# Returns the entered text in $REPLY.
+
+_rl_render() {
+  local prompt="$1" buffer="$2" cursor="$3" suggestion="$4"
+
+  # Clear current line
+  printf '\r\033[K'
+
+  # Print prompt + buffer
+  printf '%s%s' "$prompt" "$buffer"
+
+  # Ghost suggestion (dim text after buffer)
+  if [[ -n "$suggestion" && ${#buffer} -gt 0 ]]; then
+    local ghost="${suggestion:${#buffer}}"
+    printf '\033[2m%s\033[22m' "$ghost"
+  fi
+
+  # Move cursor back to correct position
+  local chars_after=$(( ${#buffer} - cursor ))
+  if [[ -n "$suggestion" && ${#buffer} -gt 0 ]]; then
+    chars_after=$(( chars_after + ${#suggestion} - ${#buffer} ))
+  fi
+  if [[ $chars_after -gt 0 ]]; then
+    printf '\033[%dD' "$chars_after"
+  fi
+}
+
+readline_input() {
+  local prompt="$1"
+  local default="${2:-}"
+  local use_history="${3:-true}"
+  local use_completion="${4:-true}"
+
+  local buffer=""
+  local cursor=0
+  local suggestion=""
+
+  # Load history
+  local -a hist_entries=()
+  [[ "$use_history" == true ]] && _history_load hist_entries
+
+  # Build display prompt with default hint
+  local full_prompt
+  if [[ -n "$default" ]]; then
+    full_prompt="${prompt}[${default}]: "
+  else
+    full_prompt="${prompt}: "
+  fi
+
+  # Save terminal state
+  local old_stty
+  old_stty=$(stty -g)
+
+  # Restore terminal on return (normal exit, error, or signal)
+  trap 'stty "$old_stty" 2>/dev/null' RETURN
+
+  # Raw-ish mode: no echo, no line buffering
+  stty -echo -icanon min 1 time 0
+
+  # Initial render
+  _rl_render "$full_prompt" "$buffer" "$cursor" ""
+
+  while true; do
+    local char=""
+    IFS= read -r -n1 char
+
+    # Get ordinal (empty char = Enter in bash)
+    local ord=0
+    if [[ -n "$char" ]]; then
+      ord=$(printf '%d' "'$char" 2>/dev/null) || ord=0
+    fi
+
+    # ── Enter ───────────────────────────────────────
+    if [[ -z "$char" || "$ord" -eq 10 || "$ord" -eq 13 ]]; then
+      break
+
+    # ── Backspace ───────────────────────────────────
+    elif [[ "$ord" -eq 127 || "$ord" -eq 8 ]]; then
+      if [[ $cursor -gt 0 ]]; then
+        buffer="${buffer:0:cursor-1}${buffer:cursor}"
+        ((cursor--))
+      fi
+
+    # ── Ctrl+A  (beginning of line) ────────────────
+    elif [[ "$ord" -eq 1 ]]; then
+      cursor=0
+
+    # ── Ctrl+E  (end of line / accept suggestion) ──
+    elif [[ "$ord" -eq 5 ]]; then
+      if [[ $cursor -eq ${#buffer} && -n "$suggestion" ]]; then
+        buffer="$suggestion"
+      fi
+      cursor=${#buffer}
+
+    # ── Ctrl+U  (clear entire line) ────────────────
+    elif [[ "$ord" -eq 21 ]]; then
+      buffer=""
+      cursor=0
+
+    # ── Ctrl+W  (delete word backward) ─────────────
+    elif [[ "$ord" -eq 23 ]]; then
+      if [[ $cursor -gt 0 ]]; then
+        local before="${buffer:0:cursor}"
+        local after="${buffer:cursor}"
+        # Trim trailing spaces first
+        while [[ ${#before} -gt 0 && "${before: -1}" == " " ]]; do
+          before="${before:0:${#before}-1}"
+        done
+        # Then delete back to the previous separator (space or /)
+        while [[ ${#before} -gt 0 && "${before: -1}" != " " && "${before: -1}" != "/" ]]; do
+          before="${before:0:${#before}-1}"
+        done
+        buffer="${before}${after}"
+        cursor=${#before}
+      fi
+
+    # ── Tab  (filesystem completion) ───────────────
+    elif [[ "$ord" -eq 9 ]]; then
+      if [[ "$use_completion" == true ]]; then
+        local completed
+        completed=$(_rl_tab_complete "$buffer")
+        local tab_ret=$?
+        if [[ $tab_ret -le 2 && -n "$completed" ]]; then
+          buffer="$completed"
+          cursor=${#buffer}
+        fi
+      fi
+
+    # ── Escape sequences (arrows, home, end, del) ──
+    elif [[ "$ord" -eq 27 ]]; then
+      local seq1="" seq2="" seq3=""
+      IFS= read -r -n1 -t 0.05 seq1 2>/dev/null || true
+      if [[ "$seq1" == "[" ]]; then
+        IFS= read -r -n1 -t 0.05 seq2 2>/dev/null || true
+        case "$seq2" in
+          C) # Right arrow (or accept suggestion at EOL)
+            if [[ $cursor -lt ${#buffer} ]]; then
+              ((cursor++))
+            elif [[ -n "$suggestion" && $cursor -eq ${#buffer} ]]; then
+              buffer="$suggestion"
+              cursor=${#buffer}
+            fi
+            ;;
+          D) # Left arrow
+            [[ $cursor -gt 0 ]] && ((cursor--))
+            ;;
+          H) # Home
+            cursor=0
+            ;;
+          F) # End (accept suggestion at EOL)
+            if [[ $cursor -eq ${#buffer} && -n "$suggestion" ]]; then
+              buffer="$suggestion"
+            fi
+            cursor=${#buffer}
+            ;;
+          3) # Delete  (ESC [ 3 ~)
+            IFS= read -r -n1 -t 0.05 seq3 2>/dev/null || true
+            if [[ "$seq3" == "~" && $cursor -lt ${#buffer} ]]; then
+              buffer="${buffer:0:cursor}${buffer:cursor+1}"
+            fi
+            ;;
+          1) # Home on some terminals (ESC [ 1 ~)
+            IFS= read -r -n1 -t 0.05 seq3 2>/dev/null || true
+            [[ "$seq3" == "~" ]] && cursor=0
+            ;;
+          4) # End on some terminals (ESC [ 4 ~)
+            IFS= read -r -n1 -t 0.05 seq3 2>/dev/null || true
+            if [[ "$seq3" == "~" ]]; then
+              if [[ $cursor -eq ${#buffer} && -n "$suggestion" ]]; then
+                buffer="$suggestion"
+              fi
+              cursor=${#buffer}
+            fi
+            ;;
+        esac
+      fi
+
+    # ── Regular printable character ────────────────
+    elif [[ "$ord" -ge 32 ]]; then
+      buffer="${buffer:0:cursor}${char}${buffer:cursor}"
+      ((cursor++))
+    fi
+
+    # Update ghost suggestion from history
+    suggestion=""
+    if [[ "$use_history" == true && -n "$buffer" ]]; then
+      suggestion=$(_history_match "$buffer" hist_entries) || true
+    fi
+
+    _rl_render "$full_prompt" "$buffer" "$cursor" "$suggestion"
+  done
+
+  # Final clean line
+  printf '\r\033[K%s%s\n' "$full_prompt" "$buffer"
+
+  # Set return value
+  if [[ -z "$buffer" ]]; then
+    REPLY="$default"
+  else
+    REPLY="$buffer"
+  fi
+
+  # Persist to history
+  if [[ "$use_history" == true && -n "$REPLY" ]]; then
+    _history_save "$REPLY"
+  fi
 }
 
 # ==================== SMART DETECTION ====================
@@ -446,6 +768,103 @@ apply_rename_mode() {
   log_ok "Renamed ${#files[@]} files ✨"
 }
 
+# ==================== SCOPE MENU (v4.0) ====================
+show_scope_menu() {
+  echo ""
+  echo -e "${MAGENTA}╭─────────────────────────────────────────────────────────╮${NC}"
+  echo -e "${MAGENTA}│${NC}   ${CYAN}🥧 How many files? 📁${NC}                                 ${MAGENTA}│${NC}"
+  echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────╯${NC}"
+  echo ""
+  echo -e "   ${WHITE}1)${NC} ${GREEN}📄 Single File${NC}     ${DIM}(One image/video, quick bake)${NC}"
+  echo -e "   ${WHITE}2)${NC} ${CYAN}📦 Bundle${NC}          ${DIM}(Bulk process a folder)${NC}"
+  echo ""
+
+  local choice
+  read -rp "   Choice [1]: " choice
+  choice="${choice:-1}"
+
+  case "$choice" in
+  1)
+    SCOPE_MODE="single"
+    log_ok "Single-file mode 📄"
+    ;;
+  2)
+    SCOPE_MODE="bundle"
+    log_ok "Bundle mode 📦"
+    ;;
+  *)
+    log_warn "Invalid choice. Using Single mode."
+    SCOPE_MODE="single"
+    ;;
+  esac
+  echo ""
+}
+
+# ==================== SINGLE-FILE PROMPTS (v4.0) ====================
+prompt_single_file() {
+  echo ""
+  echo -e "${BOLD}📄 SELECT FILE${NC}"
+  echo -e "${DIM}   Path to the image or video${NC}"
+  echo ""
+
+  readline_input "   File" "" true true
+  SINGLE_INPUT_FILE="${REPLY/#\~/$HOME}"
+
+  # Validate it exists and is a file
+  if [[ ! -f "$SINGLE_INPUT_FILE" ]]; then
+    log_err "File does not exist: $SINGLE_INPUT_FILE"
+    prompt_single_file
+    return
+  fi
+
+  # Auto-detect whether it's an image or video
+  local ext="${SINGLE_INPUT_FILE##*.}"
+  ext="${ext,,}"
+  case "$ext" in
+    jpg|jpeg|png|webp|gif)
+      BAKE_MODE="images"
+      log_ok "Detected image: ${ext^^} 🖼️"
+      ;;
+    mp4|mkv|webm|avi|mov)
+      BAKE_MODE="videos"
+      log_ok "Detected video: ${ext^^} 🎬"
+      ;;
+    *)
+      log_warn "Unknown extension '.${ext}' — treating as image"
+      BAKE_MODE="images"
+      ;;
+  esac
+}
+
+prompt_save_mode() {
+  echo ""
+  echo -e "${CYAN}╭─────────────────────────────────────────────────────────╮${NC}"
+  echo -e "${CYAN}│${NC}   ${CYAN}💾 What should I do with the result?${NC}                   ${CYAN}│${NC}"
+  echo -e "${CYAN}╰─────────────────────────────────────────────────────────╯${NC}"
+  echo ""
+  echo -e "   ${WHITE}1)${NC} ${GREEN}💾 Save As${NC}      — New file alongside original"
+  echo -e "   ${WHITE}2)${NC} ${MAGENTA}🔄 Replace${NC}     — Overwrite original"
+  echo ""
+
+  local choice
+  read -rp "   Choice [1]: " choice
+  choice="${choice:-1}"
+
+  case "$choice" in
+  1)
+    SINGLE_SAVE_MODE="saveas"
+    log_ok "Will save as new file 💾"
+    ;;
+  2)
+    SINGLE_SAVE_MODE="replace"
+    log_ok "Will replace original 🔄"
+    ;;
+  *)
+    SINGLE_SAVE_MODE="saveas"
+    ;;
+  esac
+}
+
 # ==================== MAIN MENU ====================
 show_main_menu() {
   echo ""
@@ -606,9 +1025,8 @@ prompt_source_dir() {
   echo -e "${BOLD}📁 SOURCE DIRECTORY${NC}"
   echo -e "${DIM}   Where are your files?${NC}"
   echo ""
-  read -rp "   Path [$default_path]: " input_path
-  SOURCE_DIR="${input_path:-$default_path}"
-  SOURCE_DIR="${SOURCE_DIR/#\~/$HOME}"
+  readline_input "   Path" "$default_path" true true
+  SOURCE_DIR="${REPLY/#\~/$HOME}"
 
   if ! validate_directory "$SOURCE_DIR" "source"; then
     prompt_source_dir
@@ -621,9 +1039,8 @@ prompt_output_dir() {
   echo -e "${BOLD}💾 OUTPUT DIRECTORY${NC}"
   echo -e "${DIM}   Where should I put the results?${NC}"
   echo ""
-  read -rp "   Path [$default_path]: " input_path
-  OUTPUT_DIR="${input_path:-$default_path}"
-  OUTPUT_DIR="${OUTPUT_DIR/#\~/$HOME}"
+  readline_input "   Path" "$default_path" true true
+  OUTPUT_DIR="${REPLY/#\~/$HOME}"
 
   if ! validate_directory "$OUTPUT_DIR" "output"; then
     prompt_output_dir
@@ -720,14 +1137,37 @@ prompt_confirm() {
   echo -e "${MAGENTA}│${NC}        ${CYAN}✨ Ready to bake? Here's the recipe! ✨${NC}         ${MAGENTA}│${NC}"
   echo -e "${MAGENTA}├─────────────────────────────────────────────────────────┤${NC}"
   printf "${MAGENTA}│${NC}  ${DIM}Type:${NC}       %-38s  ${MAGENTA}│${NC}\n" "$bake_text"
-  printf "${MAGENTA}│${NC}  ${DIM}Source:${NC}     %-38s  ${MAGENTA}│${NC}\n" "$SOURCE_DIR"
-  printf "${MAGENTA}│${NC}  ${DIM}Output:${NC}     %-38s  ${MAGENTA}│${NC}\n" "$OUTPUT_DIR"
-  printf "${MAGENTA}│${NC}  ${DIM}Resolution:${NC} %-38s  ${MAGENTA}│${NC}\n" "${WIDTH}x${HEIGHT}"
-  if [[ "$BAKE_MODE" == "videos" ]]; then
-    printf "${MAGENTA}│${NC}  ${DIM}Duration:${NC}   %-38s  ${MAGENTA}│${NC}\n" "${VIDEO_DURATION}s"
-    printf "${MAGENTA}│${NC}  ${DIM}FPS:${NC}        %-38s  ${MAGENTA}│${NC}\n" "$VIDEO_FPS"
-    printf "${MAGENTA}│${NC}  ${DIM}Quality:${NC}    %-38s  ${MAGENTA}│${NC}\n" "$quality_text"
+
+  if [[ "$SCOPE_MODE" == "single" ]]; then
+    # Single-file specific info
+    local file_display
+    file_display=$(basename "$SINGLE_INPUT_FILE")
+    local save_display
+    if [[ "$SINGLE_SAVE_MODE" == "replace" ]]; then
+      save_display="🔄 Replace original"
+    else
+      save_display="💾 Save as new file"
+    fi
+    printf "${MAGENTA}│${NC}  ${DIM}File:${NC}       %-38s  ${MAGENTA}│${NC}\n" "$file_display"
+    printf "${MAGENTA}│${NC}  ${DIM}Resolution:${NC} %-38s  ${MAGENTA}│${NC}\n" "${WIDTH}x${HEIGHT}"
+    if [[ "$BAKE_MODE" == "videos" ]]; then
+      printf "${MAGENTA}│${NC}  ${DIM}Duration:${NC}   %-38s  ${MAGENTA}│${NC}\n" "${VIDEO_DURATION}s"
+      printf "${MAGENTA}│${NC}  ${DIM}FPS:${NC}        %-38s  ${MAGENTA}│${NC}\n" "$VIDEO_FPS"
+      printf "${MAGENTA}│${NC}  ${DIM}Quality:${NC}    %-38s  ${MAGENTA}│${NC}\n" "$quality_text"
+    fi
+    printf "${MAGENTA}│${NC}  ${DIM}Save:${NC}       %-38s  ${MAGENTA}│${NC}\n" "$save_display"
+  else
+    # Bundle mode info
+    printf "${MAGENTA}│${NC}  ${DIM}Source:${NC}     %-38s  ${MAGENTA}│${NC}\n" "$SOURCE_DIR"
+    printf "${MAGENTA}│${NC}  ${DIM}Output:${NC}     %-38s  ${MAGENTA}│${NC}\n" "$OUTPUT_DIR"
+    printf "${MAGENTA}│${NC}  ${DIM}Resolution:${NC} %-38s  ${MAGENTA}│${NC}\n" "${WIDTH}x${HEIGHT}"
+    if [[ "$BAKE_MODE" == "videos" ]]; then
+      printf "${MAGENTA}│${NC}  ${DIM}Duration:${NC}   %-38s  ${MAGENTA}│${NC}\n" "${VIDEO_DURATION}s"
+      printf "${MAGENTA}│${NC}  ${DIM}FPS:${NC}        %-38s  ${MAGENTA}│${NC}\n" "$VIDEO_FPS"
+      printf "${MAGENTA}│${NC}  ${DIM}Quality:${NC}    %-38s  ${MAGENTA}│${NC}\n" "$quality_text"
+    fi
   fi
+
   printf "${MAGENTA}│${NC}  ${DIM}Threads:${NC}    %-38s  ${MAGENTA}│${NC}\n" "$CPU_THREADS"
   printf "${MAGENTA}│${NC}  ${DIM}Mode:${NC}       %-38s  ${MAGENTA}│${NC}\n" "$mode_text"
   echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────╯${NC}"
@@ -741,22 +1181,42 @@ prompt_confirm() {
 
 run_interactive_mode() {
   show_banner
-  show_main_menu
-  prompt_source_dir
-  prompt_output_dir
-  prompt_resolution
+  show_scope_menu
 
-  if [[ "$BAKE_MODE" == "videos" ]]; then
-    prompt_video_input_ext
-    prompt_video_output_format
-    prompt_video_duration
-    prompt_video_fps
-    prompt_video_quality
+  if [[ "$SCOPE_MODE" == "single" ]]; then
+    # ── Single-file flow ──
+    prompt_single_file
+    prompt_resolution
+
+    if [[ "$BAKE_MODE" == "videos" ]]; then
+      prompt_video_output_format
+      prompt_video_duration
+      prompt_video_fps
+      prompt_video_quality
+    fi
+
+    prompt_save_mode
+    prompt_preview
+    prompt_confirm
+  else
+    # ── Bundle flow (original) ──
+    show_main_menu
+    prompt_source_dir
+    prompt_output_dir
+    prompt_resolution
+
+    if [[ "$BAKE_MODE" == "videos" ]]; then
+      prompt_video_input_ext
+      prompt_video_output_format
+      prompt_video_duration
+      prompt_video_fps
+      prompt_video_quality
+    fi
+
+    prompt_preview
+    prompt_confirm
+    check_output_conflict
   fi
-
-  prompt_preview
-  prompt_confirm
-  check_output_conflict
 }
 
 # ==================== ARGUMENT PARSING ====================
@@ -791,6 +1251,22 @@ parse_args() {
     -p | --preview)
       PREVIEW_MODE=true
       shift
+      ;;
+    --single)
+      SCOPE_MODE="single"
+      SINGLE_INPUT_FILE="${2:-}"
+      SINGLE_INPUT_FILE="${SINGLE_INPUT_FILE/#\~/$HOME}"
+      shift 2
+      ;;
+    --save-mode)
+      case "${2,,}" in
+      saveas | replace) SINGLE_SAVE_MODE="${2,,}" ;;
+      *)
+        log_err "Invalid save mode: $2 (use: saveas|replace)"
+        exit 1
+        ;;
+      esac
+      shift 2
       ;;
     --conflict)
       CONFLICT_MODE="${2,,}"
@@ -853,7 +1329,7 @@ parse_args() {
     esac
   done
 
-  if [[ -n "$SOURCE_DIR" || -n "$OUTPUT_DIR" || -n "$TARGET_RES" ]]; then
+  if [[ -n "$SINGLE_INPUT_FILE" || -n "$SOURCE_DIR" || -n "$OUTPUT_DIR" || -n "$TARGET_RES" ]]; then
     INTERACTIVE_MODE=false
   fi
 }
@@ -861,7 +1337,44 @@ parse_args() {
 validate_cli_args() {
   local has_error=false
 
-  # Default to PWD if not specified
+  # Single-file mode validation
+  if [[ "$SCOPE_MODE" == "single" ]]; then
+    if [[ ! -f "$SINGLE_INPUT_FILE" ]]; then
+      log_err "File not found: $SINGLE_INPUT_FILE"
+      has_error=true
+    fi
+
+    if [[ -z "$TARGET_RES" ]]; then
+      log_err "Resolution required (--res)"
+      has_error=true
+    elif ! validate_resolution "$TARGET_RES"; then
+      has_error=true
+    fi
+
+    # Auto-detect bake mode from extension
+    if [[ -z "$BAKE_MODE" && -f "$SINGLE_INPUT_FILE" ]]; then
+      local ext="${SINGLE_INPUT_FILE##*.}"
+      ext="${ext,,}"
+      case "$ext" in
+        jpg|jpeg|png|webp|gif) BAKE_MODE="images" ;;
+        mp4|mkv|webm|avi|mov) BAKE_MODE="videos" ;;
+        *) BAKE_MODE="images" ;;
+      esac
+    fi
+
+    [[ -z "$SINGLE_SAVE_MODE" ]] && SINGLE_SAVE_MODE="saveas"
+
+    if [[ "$has_error" == true ]]; then
+      exit 1
+    fi
+
+    WIDTH="${TARGET_RES%x*}"
+    HEIGHT="${TARGET_RES#*x}"
+    apply_quality_settings
+    return
+  fi
+
+  # Bundle mode validation (original)
   if [[ -z "$SOURCE_DIR" ]]; then
     SOURCE_DIR="$PWD"
     log_info "Using current directory as source: $SOURCE_DIR"
@@ -893,6 +1406,190 @@ validate_cli_args() {
   HEIGHT="${TARGET_RES#*x}"
 
   apply_quality_settings
+}
+
+# ==================== SINGLE-FILE PROCESSING (v4.0) ====================
+readonly BAKERY_TRASH_DIR="/tmp/hyprbakery_trash"
+
+process_single_image() {
+  local file="$SINGLE_INPUT_FILE"
+  local base_name ext_lower name_noext dir_path
+  base_name=$(basename "$file")
+  dir_path=$(dirname "$file")
+  ext_lower="${base_name##*.}"
+  ext_lower="${ext_lower,,}"
+  name_noext="${base_name%.*}"
+
+  echo ""
+  echo -e "${MAGENTA}╭─────────────────────────────────────────────────────────╮${NC}"
+  echo -e "${MAGENTA}│${NC}   ${GREEN}🖼️  ${PREVIEW_MODE:+Preview: }Baking single image... (~˘▾˘)~${NC}          ${MAGENTA}│${NC}"
+  echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────╯${NC}"
+  echo ""
+
+  # Handle GIFs
+  if [[ "$ext_lower" == "gif" ]]; then
+    if [[ "$PREVIEW_MODE" == true ]]; then
+      log_gif "Would copy GIF as-is: $base_name"
+    else
+      log_gif "GIF — nothing to resize, already perfect ✨"
+    fi
+    return
+  fi
+
+  # Skip unsupported
+  if [[ ! "$ext_lower" =~ ^(jpg|jpeg|png|webp)$ ]]; then
+    log_err "Unsupported format: .$ext_lower"
+    return
+  fi
+
+  # Get current dimensions
+  local dimensions
+  dimensions=$(ffprobe -v error -select_streams v:0 \
+    -show_entries stream=width,height -of csv=s=x:p=0 -- "$file" 2>/dev/null) || true
+
+  if [[ -z "$dimensions" ]]; then
+    log_err "Could not read image: $base_name"
+    return
+  fi
+
+  if [[ "$dimensions" == "$TARGET_RES" ]]; then
+    log_skip "Already ${TARGET_RES} — nothing to do ✨"
+    return
+  fi
+
+  # Output extension
+  local output_ext
+  case "$ext_lower" in
+    jpg|jpeg) output_ext="jpg" ;;
+    png) output_ext="png" ;;
+    webp) output_ext="png" ;;
+  esac
+
+  if [[ "$PREVIEW_MODE" == true ]]; then
+    log_fix "Would resize: $base_name ($dimensions → ${TARGET_RES})"
+    return
+  fi
+
+  log_fix "Resizing: $base_name ($dimensions → ${TARGET_RES})"
+
+  # Build output path based on save mode
+  local output_path
+  if [[ "$SINGLE_SAVE_MODE" == "replace" ]]; then
+    output_path="${dir_path}/.bakery_tmp_${base_name}"
+  else
+    output_path="${dir_path}/${name_noext}_baked.${output_ext}"
+  fi
+
+  local ffmpeg_opts=(-hide_banner -loglevel error -y -threads "$CPU_THREADS" -i "$file")
+  ffmpeg_opts+=(-vf "scale=${WIDTH}:${HEIGHT}:force_original_aspect_ratio=increase,crop=${WIDTH}:${HEIGHT}")
+  ffmpeg_opts+=(-sws_flags lanczos)
+  [[ "$output_ext" == "jpg" ]] && ffmpeg_opts+=(-q:v 2)
+
+  if ffmpeg "${ffmpeg_opts[@]}" "$output_path" 2>/dev/null; then
+    if [[ "$SINGLE_SAVE_MODE" == "replace" ]]; then
+      # Move original to trash, then put result in its place
+      mkdir -p "$BAKERY_TRASH_DIR"
+      mv -- "$file" "$BAKERY_TRASH_DIR/$base_name"
+      mv -- "$output_path" "$file"
+      log_ok "Replaced! Original saved to $BAKERY_TRASH_DIR/ 🗑️"
+    else
+      log_ok "Saved: $(basename "$output_path") ✨"
+    fi
+  else
+    log_err "FFMPEG failed: $base_name"
+    rm -f "$output_path"
+  fi
+}
+
+process_single_video() {
+  local file="$SINGLE_INPUT_FILE"
+  local base_name ext_lower name_noext dir_path
+  base_name=$(basename "$file")
+  dir_path=$(dirname "$file")
+  ext_lower="${base_name##*.}"
+  ext_lower="${ext_lower,,}"
+  name_noext="${base_name%.*}"
+
+  echo ""
+  echo -e "${MAGENTA}╭─────────────────────────────────────────────────────────╮${NC}"
+  echo -e "${MAGENTA}│${NC}   ${MAGENTA}🎬 ${PREVIEW_MODE:+Preview: }Baking single video... ~(˘▾˘)~${NC}          ${MAGENTA}│${NC}"
+  echo -e "${MAGENTA}╰─────────────────────────────────────────────────────────╯${NC}"
+  echo ""
+
+  if [[ "$PREVIEW_MODE" == true ]]; then
+    log_vid "Would convert: $base_name → ${VIDEO_OUTPUT_FORMAT^^}"
+    return
+  fi
+
+  log_vid "Converting: $base_name → ${VIDEO_OUTPUT_FORMAT^^}"
+
+  # Build output path based on save mode
+  local output_path
+  if [[ "$SINGLE_SAVE_MODE" == "replace" ]]; then
+    output_path="${dir_path}/.bakery_tmp_${name_noext}.${VIDEO_OUTPUT_FORMAT}"
+  else
+    output_path="${dir_path}/${name_noext}_baked.${VIDEO_OUTPUT_FORMAT}"
+  fi
+
+  local scale_filter="scale=${WIDTH}:${HEIGHT}:force_original_aspect_ratio=increase,crop=${WIDTH}:${HEIGHT}"
+  local ffmpeg_cmd=(ffmpeg -hide_banner -loglevel error -y -threads "$CPU_THREADS")
+
+  if [[ "$VIDEO_DURATION" != "full" ]]; then
+    ffmpeg_cmd+=(-t "$VIDEO_DURATION")
+  fi
+  ffmpeg_cmd+=(-i "$file")
+
+  local success=false
+
+  case "$VIDEO_OUTPUT_FORMAT" in
+  webp)
+    ffmpeg_cmd+=(-vf "${scale_filter},fps=${VIDEO_FPS}")
+    ffmpeg_cmd+=(-vcodec libwebp)
+    ffmpeg_cmd+=(-lossless 0 -q:v "$WEBP_QUALITY" -loop 0 -preset default)
+    ffmpeg_cmd+=(-an)
+    "${ffmpeg_cmd[@]}" "$output_path" 2>/dev/null && success=true
+    ;;
+  gif)
+    local palette_file="${dir_path}/.bakery_palette_$$.png"
+    ffmpeg -hide_banner -loglevel error -y -threads "$CPU_THREADS" \
+      ${VIDEO_DURATION:+-t "$VIDEO_DURATION"} \
+      -i "$file" \
+      -vf "${scale_filter},fps=${VIDEO_FPS},palettegen=stats_mode=diff" \
+      "$palette_file" 2>/dev/null
+
+    if [[ -f "$palette_file" ]]; then
+      ffmpeg -hide_banner -loglevel error -y -threads "$CPU_THREADS" \
+        ${VIDEO_DURATION:+-t "$VIDEO_DURATION"} \
+        -i "$file" -i "$palette_file" \
+        -lavfi "${scale_filter},fps=${VIDEO_FPS} [x]; [x][1:v] paletteuse=dither=bayer:bayer_scale=5" \
+        "$output_path" 2>/dev/null && success=true
+      rm -f "$palette_file"
+    else
+      ffmpeg_cmd+=(-vf "${scale_filter},fps=${VIDEO_FPS}")
+      "${ffmpeg_cmd[@]}" "$output_path" 2>/dev/null && success=true
+    fi
+    ;;
+  mp4)
+    ffmpeg_cmd+=(-vf "$scale_filter")
+    ffmpeg_cmd+=(-c:v libx264 -preset fast -crf "$VIDEO_CRF")
+    ffmpeg_cmd+=(-an)
+    "${ffmpeg_cmd[@]}" "$output_path" 2>/dev/null && success=true
+    ;;
+  esac
+
+  if [[ "$success" == true && -f "$output_path" ]]; then
+    if [[ "$SINGLE_SAVE_MODE" == "replace" ]]; then
+      mkdir -p "$BAKERY_TRASH_DIR"
+      mv -- "$file" "$BAKERY_TRASH_DIR/$base_name"
+      mv -- "$output_path" "${dir_path}/${name_noext}.${VIDEO_OUTPUT_FORMAT}"
+      log_ok "Replaced! Original saved to $BAKERY_TRASH_DIR/ 🗑️"
+    else
+      log_ok "Saved: $(basename "$output_path") ✨"
+    fi
+  else
+    log_err "FFMPEG failed: $base_name"
+    rm -f "$output_path"
+  fi
 }
 
 # ==================== IMAGE PROCESSING ====================
@@ -1090,7 +1787,7 @@ process_videos() {
       ;;
     gif)
       # High-quality GIF with palette
-      local palette_file="/tmp/palette_$$.png"
+      local palette_file="${staging_dir}/palette_$$.png"
 
       # Generate palette
       ffmpeg -hide_banner -loglevel error -y -threads "$CPU_THREADS" \
@@ -1221,10 +1918,19 @@ main() {
     validate_cli_args
   fi
 
-  if [[ "$BAKE_MODE" == "videos" ]]; then
-    process_videos
+  # Dispatch: single-file vs bundle
+  if [[ "$SCOPE_MODE" == "single" ]]; then
+    if [[ "$BAKE_MODE" == "videos" ]]; then
+      process_single_video
+    else
+      process_single_image
+    fi
   else
-    process_images
+    if [[ "$BAKE_MODE" == "videos" ]]; then
+      process_videos
+    else
+      process_images
+    fi
   fi
 }
 

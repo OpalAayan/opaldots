@@ -1,0 +1,204 @@
+{
+    // --- Battery ---
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-missing": "󱟩",
+        "format-icons": [
+            " ",
+            " ",
+            " ",
+            " ",
+            " "
+        ],
+        "interval": 3
+    },
+    // --- Bluetooth ---
+    "bluetooth": {
+        "format": "",
+        "format-disabled": "󰂲",
+        "format-connected": "󰂱 ({num_connections})",
+        "format-off": "",
+        "interval": 30,
+        "on-click": "blueberry",
+        "format-no-controller": ""
+    },
+    // --- App Launcher (Fuzzel) ---
+    "custom/launcher": {
+        "format": "",
+        "tooltip": true,
+        "tooltip-format": "App Launcher",
+        "on-click": "rofi -show drun -show-icons"
+    },
+    // --- Disk Usage ---
+    "disk": {
+        "interval": 30,
+        "format": " {percentage_used}%",
+        "path": "/",
+        "on-click": "baobab"
+    },
+    // --- Memory (Updated) ---
+    "memory": {
+        "format": " {percentage}%",
+        // "on-click": "kitty -e btop"
+        "on-click": "~/.config/waybar/scripts/btop-floating.sh"
+    },
+    // --- Temperature ---
+    "temperature": {
+        "thermal-zone": 0,
+        "format": " {temperatureC}°C",
+        "format-critical": " {temperatureC}°C",
+        "critical-threshold": 80,
+        "interval": 5
+    },
+    // --- CPU Usage (Updated) ---
+    "cpu": {
+        "format": " {usage}%",
+        //"on-click": "kitty -e btop"
+        "on-click": "~/.config/waybar/scripts/btop-floating.sh"
+    },
+// --- Workspaces ---
+    "hyprland/workspaces": {
+   // "ext/workspaces":{
+    "format": "{name}",
+    "tooltip": false,
+    "on-click": "activate",
+    "sort-by-number": true,
+    "persistent-workspaces": {
+        "*": 4
+    },
+    "special-visible-only": false
+},
+
+// --- Special Workspace indicator (scratchpad) ---
+   // "hyprland/submap": {
+   // "format": " {}"   need somthing better
+//}, 
+  // --- Date Module (as a clock instance) ---
+    "clock#date": {
+        "format": " {:%a %d;%b}",
+        "on-click": "gnome-calendar",
+        "interval": 10,
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "year",
+            "mode-mon-col": 3,
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            "format": {
+                "months": "<span color='#fab387'><b>{}</b></span>",
+                "days": "<span color='#cdd6f4'><b>{}</b></span>",
+                "weeks": "<span color='#94e2d5'><b>W{}</b></span>",
+                "weekdays": "<span color='#f9e2af'><b>{}</b></span>",
+                //"today": "<span color='#f38ba8'><b>{}</b></span>" //to just get the date in diffrent color
+                "today": "<span color='#1e1e2e' background='#f38ba8'><b>{}</b></span>"
+            }
+        }
+    },
+    // --- New Day Alert (Ghost Module) ---
+    "custom/newday": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": 1,
+        "exec": "~/.config/waybar/scripts/newday_alert.sh",
+        "tooltip": false
+    },
+    // --- Time Module (as a clock instance) ---
+    "clock#time": {
+        "format": " {:%I:%M:%S %p}",
+        "interval": 1,
+        "tooltip": true,
+        "tooltip-format": "Might die soon~"
+    },
+    // --- Dynamic Clock (Script) ---
+    "custom/dynamic_clock": {
+        "exec": "~/.config/waybar/scripts/dynamic_clock.sh",
+        "interval": 1,
+        "format": "{}",
+        "tooltip": true,
+        "tooltip-format": "Might die soon~"
+    },
+    // --- Power Menu ---
+    "custom/power": {
+        "format": "⏻",
+        "tooltip": false,
+        "on-click": "~/.config/wlogout/launch.sh"
+    },
+    // --- Network ---
+    "network": {
+        "format-wifi": "{icon}",
+        "format-ethernet": "", 
+        "format-linked": "󰖂",
+        "format-vpn": "󱥸", 
+        "format-disconnected": "󰖪",
+        "format-icons": [
+            "󰤯",
+            "󰤟",
+            "󰤢",
+            "󰤥",
+            "󰤨"
+        ],
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}\n{essid} ({signalStrength}%)\n⬆ {bandwidthUpBytes} ⬇ {bandwidthDownBytes}",
+        "on-click": "~/.config/waybar/scripts/nmtui-floating.sh"
+    },
+    // --- Audio ---
+    "pulseaudio": {
+        "format": " {volume}%",
+        "format-muted": "󰖁",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "󱡏",
+            "headset": "󰋎",
+            "default": ["", "", ""]
+            
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-scroll-up": "~/.config/waybar/scripts/scroll_volume.sh up",
+        "on-scroll-down": "~/.config/waybar/scripts/scroll_volume.sh down",
+        "scroll-step": 1
+    },
+    // --- Color Picker ---
+    "custom/picker": {
+        "format": "󰃉",
+        "tooltip": true,
+        "tooltip-format": "Color picker",
+        "on-click": "~/.config/waybar/scripts/picker.sh"
+    },
+    // --- Power profile ---
+    "custom/powerpfp": {
+        "format": "{text}",
+        "tooltip": true,
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/power-profile.sh get",
+        "interval": 5,
+        "on-click": "~/.config/waybar/scripts/power-profile.sh cycle"
+    },
+    // --- Night Light ---
+    "custom/nightlight": {
+        "format": "󰖔",
+        "tooltip": true,
+        "tooltip-format": "Night Light",
+        "on-click": "~/.config/waybar/scripts/nightlight_control.sh",
+        "on-scroll-up": "~/.config/waybar/scripts/nightlight_control.sh increase",
+        "on-scroll-down": "~/.config/waybar/scripts/nightlight_control.sh decrease"
+    },
+    // --- Brightness ---
+    "custom/brightness": {
+        "format": "󱞖", 
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/brightness_waybar.sh",
+        "interval": 1,
+        "tooltip": true,
+        "on-click": "~/.config/waybar/scripts/brightness_waybar.sh",
+        "on-scroll-up": "~/.config/waybar/scripts/brightness_waybar.sh up",
+        "on-scroll-down": "~/.config/waybar/scripts/brightness_waybar.sh down"
+
+    }
+}
