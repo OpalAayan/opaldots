@@ -1,160 +1,61 @@
-import QtQuick 
-import Quickshell 
+import QtQuick
+import Quickshell
 import Quickshell.Wayland
-import QtQuick.Layouts
-import QtQuick.Effects
- 
+import Quickshell.Io
+
 PanelWindow {
+    id: root
+
     WlrLayershell.layer: WlrLayer.Bottom
     exclusiveZone: 0
-    
-    // ==========================================
-    // 1. WINDOW POSITIONING (THE PLACEHOLDERS)
-    // ==========================================
-    // Turn these to 'true' to glue the window to that side.
+
+    // ── Geometry defaults (overwritten synchronously when geometry.json loads) ──
+    property int geoX: 650
+    property int geoY: 15
+    property int geoW: 800
+    property int geoH: 180
+
     anchors {
         top: true
-        right: true
-        // left: true
-        // bottom: true
-    }
- 
-    // Push the window away from the edges here!
-    // Note: These only work if the matching anchor above is 'true'
-    margins {
-        top: 15
-        right : 650
-        //left: 600
-        // bottom: 0
+        left: true
     }
 
-    // The size of the invisible master window holding everything
-    implicitWidth: 800
-    implicitHeight: 180
-    color: "transparent"
- 
-    SystemClock {
-        id: sysTime
-        precision: SystemClock.Seconds
+    margins {
+        top: root.geoY
+        left: root.geoX
     }
- 
-    // ==========================================
-    // 2. THE CONTENT ALIGNMENT
-    // ==========================================
-    ColumnLayout {
-        anchors.centerIn: parent
-        anchors.horizontalCenter: parent.horizontalCenter
-        
-        // --- THE DAY ---
-        Text {
-            text: Qt.formatDateTime(sysTime.date, "dddd").toUpperCase()
-            font.family: "Anurati"
-            font.pixelSize: 64 
-            font.letterSpacing: 30
-            color: "#ffffff"
-            
-            // Text Shadow Settings
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                shadowEnabled: true 
-                shadowColor: '#000000'
-                shadowBlur: 0.5
-                shadowVerticalOffset: 3
-                shadowHorizontalOffset: 3
+
+    implicitWidth: root.geoW
+    implicitHeight: root.geoH
+    color: "transparent"
+
+    FileView {
+        id: geometryFile
+        path: Qt.resolvedUrl("geometry.json").toString().replace(/^file:\/\//, "")
+        blockLoading: true
+        watchChanges: true
+
+        onFileChanged: reload()
+
+        function reload() {
+            try {
+                var content = geometryFile.text();
+                if (content && content.length > 0) {
+                    var geo = JSON.parse(content);
+                    if (geo.x !== undefined) root.geoX = geo.x;
+                    if (geo.y !== undefined) root.geoY = geo.y;
+                    if (geo.width !== undefined) root.geoW = geo.width;
+                    if (geo.height !== undefined) root.geoH = geo.height;
+                }
+            } catch (e) {
+                console.warn("clock/shell.qml: failed to parse geometry.json:", e);
             }
         }
- 
-        // --- THE INVISIBLE BOX FOR TIME & DATE ---
-        // We use an Item instead of a Row so we can nudge Time and Date independently!
-        Item {
-            Layout.alignment: Qt.AlignHCenter
-            Layout.topMargin: 10    // Push the whole invisible box DOWN, away from the Day text
-            implicitWidth: 12      // The width of our invisible box
-            implicitHeight: 10     // The height of our invisible box
 
-    
-         // --- THE SLASH SEPARATOR ---
-            Text {
-                anchors.centerIn: parent
-                // TICKLE THESE TO MOVE THE SLASH:
-                anchors.horizontalCenterOffset: -75   // Nudge LEFT (negative) or RIGHT (positive)
-                anchors.verticalCenterOffset: 0   // Nudge UP (negative) or DOWN (positive)
-                
-                text: "/"
-                font {
-                    family: "FiraCode Nerd Font"
-                    pixelSize: 25
-                    letterSpacing: 2
-                    bold: true
-                }
-                color: '#ffffff'
-                
-                // Text Shadow Settings
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: true 
-                    shadowColor: '#000000'
-                    shadowBlur: 0.5
-                    shadowVerticalOffset: 3
-                    shadowHorizontalOffset: 3 
-                }
-            }
+        Component.onCompleted: reload()
+    }
 
-
-            // --- THE TIME ---
-            Text {
-                anchors.centerIn: parent
-                // TICKLE THESE TO MOVE THE TIME:
-                anchors.horizontalCenterOffset: -140 // Nudge LEFT (negative) or RIGHT (positive)
-                anchors.verticalCenterOffset: 0     // Nudge UP (negative) or DOWN (positive)
-
-                textFormat: Text.RichText
-                text: Qt.formatDateTime(sysTime.date, "hh:mm")
-                font {
-                    family: "FiraCode Nerd Font"
-                    pixelSize: 25
-                    letterSpacing: 2
-                    bold: true
-                }
-                color: '#ffffff'
-                
-                // Text Shadow Settings
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: true 
-                    shadowColor: '#000000'
-                    shadowBlur: 0.5
-                    shadowVerticalOffset: 3
-                    shadowHorizontalOffset: 3 
-                }
-            }
-                      // --- THE DATE ---
-            Text {
-                anchors.centerIn: parent
-                // TICKLE THESE TO MOVE THE DATE:
-                anchors.horizontalCenterOffset: 30  // Nudge LEFT (negative) or RIGHT (positive)
-                anchors.verticalCenterOffset: 0     // Nudge UP (negative) or DOWN (positive)
-
-                textFormat: Text.RichText
-                text: Qt.formatDateTime(sysTime.date, "dd:MM:yyyy")
-                font {
-                    family: "FiraCode Nerd Font"
-                    pixelSize: 25
-                    letterSpacing: 2
-                    bold: true
-                }
-                color: '#ffffff' 
-                
-                // Text Shadow Settings
-                layer.enabled: true 
-                layer.effect: MultiEffect {
-                    shadowEnabled: true 
-                    shadowColor: '#000000'
-                    shadowBlur: 0.5
-                    shadowVerticalOffset: 3
-                    shadowHorizontalOffset: 3 
-                } 
-            }
-        } 
+    ClockContent {
+        anchors.fill: parent
     }
 }

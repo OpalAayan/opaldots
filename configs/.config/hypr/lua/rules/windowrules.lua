@@ -205,3 +205,11 @@ hl.window_rule({
     match = { class = "^(bluej\\.Boot\\$App)$", float = true },
     no_blur = true,
 })
+
+-- ── Quickshell Widget Editor ──
+hl.window_rule({
+    match = { title = "^(WidgetEdit_.*)$" },
+    float = true,
+    pin = true,
+    border_color = "rgba(cba6f7ff) rgba(f38ba8ff)",
+})

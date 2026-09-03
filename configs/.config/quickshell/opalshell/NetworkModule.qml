@@ -11,12 +11,13 @@ Badge {
     // Expose popup control for BluetoothModule to use
     property alias networkPopup: popup
 
-    function formatBytes(bytes) {
-        if (bytes === 0) return "0 B/s";
-        const k = 1024;
-        const sizes = ["B/s", "KB/s", "MB/s", "GB/s"];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+    function formatSpeed(bytesPerSec) {
+        if (!bytesPerSec || bytesPerSec <= 0) return "0 bps";
+        let bits = bytesPerSec * 8;
+        if (bits >= 1000000000) return (bits / 1000000000).toFixed(1) + " Gbps";
+        if (bits >= 1000000)    return (bits / 1000000).toFixed(1) + " Mbps";
+        if (bits >= 1000)       return (bits / 1000).toFixed(0) + " Kbps";
+        return bits.toFixed(0) + " bps";
     }
 
     function getNetworkIcon() {
@@ -40,9 +41,9 @@ Badge {
             tt += "\n" + SysBridge.networkSsid + " (" + SysBridge.networkSignal + "%)";
         }
         
-        var upStr = formatBytes(SysBridge.networkUpBytes);
-        var downStr = formatBytes(SysBridge.networkDownBytes);
-        tt += "\n⬆ " + upStr + "  ⬇ " + downStr;
+        var upStr = formatSpeed(SysBridge.networkUpBytes);
+        var downStr = formatSpeed(SysBridge.networkDownBytes);
+        tt += "\n↓ " + downStr + "  ↑ " + upStr;
         return tt;
     }
 
@@ -54,19 +55,8 @@ Badge {
     implicitWidth: 34
     tooltipText: getTooltip()
 
-    focus: true
-    Keys.onEscapePressed: (event) => {
-        if (popup.popupVisible) {
-            popup.close()
-            event.accepted = true
-        }
-    }
-
     onClicked: {
         popup.toggle("network")
-        if (popup.popupVisible) {
-            netBadge.forceActiveFocus()
-        }
     }
 
     NetworkBluetoothPopup {

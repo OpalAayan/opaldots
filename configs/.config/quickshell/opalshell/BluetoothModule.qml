@@ -27,23 +27,12 @@ Badge {
     iconSize: 14
     tooltipText: "Bluetooth: " + (btStatus === "on" ? (connectedDevices > 0 ? (connectedDevices + " device(s) connected") : "On") : "Off")
 
-    focus: true
-    Keys.onEscapePressed: (event) => {
-        if (networkModuleRef && networkModuleRef.networkPopup && networkModuleRef.networkPopup.popupVisible) {
-            networkModuleRef.networkPopup.close()
-            event.accepted = true
-        }
-    }
-
     onClicked: {
         if (networkModuleRef && networkModuleRef.networkPopup) {
             // Use the NetworkModule's shared popup, switch to BT tab
             let popup = networkModuleRef.networkPopup
             popup.anchorItem = btBadge
             popup.toggle("bt")
-            if (popup.popupVisible) {
-                btBadge.forceActiveFocus()
-            }
         }
     }
 }

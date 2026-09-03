@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Hyprland
 
 /* DateModule.qml — Current Date with beautiful custom Calendar popup */
 
@@ -23,20 +24,11 @@ Badge {
     accentColor: "#94e2d5"
     tooltipText: "" // disable default tooltip
 
-    focus: true
-    Keys.onEscapePressed: (event) => {
-        if (popupVisible) {
-            popupVisible = false
-            event.accepted = true
-        }
-    }
-
     onClicked: {
         popupVisible = !popupVisible
         if (popupVisible) {
             // Reset the calendar to the current month when opened
             displayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
-            dateBadge.forceActiveFocus()
         }
     }
 
@@ -52,6 +44,12 @@ Badge {
         implicitHeight: 290
         
         color: "transparent"
+
+        HyprlandFocusGrab {
+            windows: [calendarPopup]
+            active: dateBadge.popupVisible
+            onCleared: dateBadge.popupVisible = false
+        }
 
         Rectangle {
             focus: true

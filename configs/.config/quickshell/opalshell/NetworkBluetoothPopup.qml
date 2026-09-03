@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Hyprland
 import Quickshell.Io
 
 /*  NetworkBluetoothPopup.qml
@@ -85,22 +86,44 @@ Item {
     }
 
     /* ═══════════════════════════════════════════
-     * BACKEND STATE
+     * BACKEND STATE & SPEED FORMATTER
      * ═══════════════════════════════════════════ */
-    property bool ethPresent:  false
-    property bool wifiPresent: false
+
+    /**
+     * formatSpeed — Auto-scaling bits/s formatter.
+     * Input:  bytesPerSec (number from SysBridge)
+     * Output: human-readable string like "1.2 Mbps", "340 Kbps", "0 bps"
+     */
+    function formatSpeed(bytesPerSec) {
+        if (!bytesPerSec || bytesPerSec <= 0) return "0 bps";
+        let bits = bytesPerSec * 8;
+        if (bits >= 1000000000) return (bits / 1000000000).toFixed(1) + " Gbps";
+        if (bits >= 1000000)    return (bits / 1000000).toFixed(1) + " Mbps";
+        if (bits >= 1000)       return (bits / 1000).toFixed(0) + " Kbps";
+        return bits.toFixed(0) + " bps";
+    }
+
+    property bool ethPresent:  SysBridge.networkType === "ethernet" || (!!ethConnected)
+    property bool wifiPresent: SysBridge.networkType === "wifi" || (!!wifiConnected)
     property bool btPresent:   false
 
-    property string ethPower:  "off"   // Derived from connection state (no software toggle)
-    property string wifiPower: "off"
-    property string btPower:   "off"
+    property string ethPower:  SysBridge.networkConnected && SysBridge.networkType === "ethernet" ? "on" : "off"
+    property string wifiPower: SysBridge.networkConnected && SysBridge.networkType === "wifi" ? "on" : "off"
+    property string btPower:   SysBridge.bluetoothStatus === "on" ? "on" : "off"
 
-    property var ethConnected:  null
+    property var ethConnected: (SysBridge.networkConnected && SysBridge.networkType === "ethernet") ? {
+        id: SysBridge.networkIfname,
+        name: SysBridge.networkIfname,
+        icon: "󰈀",
+        ip: SysBridge.networkIp,
+        speed: formatSpeed(SysBridge.networkDownBytes),
+        mac: ""
+    } : null
     property var wifiConnected: null
     property var btConnected:   []
     property var wifiList:      []
     property var btList:        []
-    property string ethDeviceName: ""
+    property string ethDeviceName: SysBridge.networkIfname
 
     // Connection busy state
     property string connectingId: ""
@@ -121,9 +144,9 @@ Item {
 
     // Derived
     readonly property bool currentPower:
-        activeMode === "network" ? wifiPower === "on" || isEthConn
-      :                            btPower   === "on"
-    readonly property bool isEthConn:  !!ethConnected
+        activeMode === "network" ? (wifiPower === "on" || isEthConn)
+      :                            (btPower   === "on")
+    readonly property bool isEthConn:  (!!ethConnected && ethConnected.name !== "") || (SysBridge.networkConnected && SysBridge.networkType === "ethernet")
     readonly property bool isWifiConn: !!wifiConnected && wifiConnected.ssid !== undefined
     readonly property bool isBtConn:   btConnected.length > 0
     readonly property bool currentConn:
@@ -358,6 +381,23 @@ Item {
         Text { font.family:root.fontMain; font.pixelSize:10; color:root.cSubtext1; text:parent.value; elide:Text.ElideRight; Layout.fillWidth:true }
     }
 
+    /* Reusable ↓/↑ speed indicator row */
+    component SpeedRow : RowLayout {
+        property double downBytes: 0
+        property double upBytes: 0
+        spacing: 14
+        RowLayout {
+            spacing: 4
+            Text { font.family:root.fontMain; font.pixelSize:10; color:root.cTeal; text:"↓" }
+            Text { font.family:root.fontMain; font.pixelSize:10; color:root.cSubtext1; text:root.formatSpeed(downBytes) }
+        }
+        RowLayout {
+            spacing: 4
+            Text { font.family:root.fontMain; font.pixelSize:10; color:root.cPeach; text:"↑" }
+            Text { font.family:root.fontMain; font.pixelSize:10; color:root.cSubtext1; text:root.formatSpeed(upBytes) }
+        }
+    }
+
     /* ═══════════════════════════════════════════
      * POPUP WINDOW
      * ═══════════════════════════════════════════ */
@@ -371,7 +411,12 @@ Item {
         color: "transparent"
         implicitWidth: 380
         implicitHeight: 540
-        //WlrLayershell.layer: WlrLayer.Top <- wtf is wrong with it?
+
+        HyprlandFocusGrab {
+            windows: [popupWindow]
+            active: root.popupVisible
+            onCleared: root.close()
+        }
         
         Rectangle {
             id: popupBg
@@ -539,14 +584,23 @@ Item {
                                     spacing: 10
                                     Text { font.family:root.fontMain; font.pixelSize:22; color:root.cTeal; text:"󰈀" }
                                     ColumnLayout { spacing:1
-                                        Text { font.family:root.fontMain; font.pixelSize:13; font.weight:Font.Bold; color:root.cText; text:root.ethConnected?root.ethConnected.name:"" }
+                                        Text { font.family:root.fontMain; font.pixelSize:13; font.weight:Font.Bold; color:root.cText; text:(root.ethConnected&&root.ethConnected.name)?root.ethConnected.name:SysBridge.networkIfname }
                                         Text { font.family:root.fontAlt; font.pixelSize:10; color:root.cSubtext0; text:"Ethernet · Connected" }
                                     }
                                 }
                                 GridLayout { columns:2; columnSpacing:12; rowSpacing:1; Layout.leftMargin:32
-                                    InfoPair { label:"IP"; value:root.ethConnected?(root.ethConnected.ip||"..."):"" }
-                                    InfoPair { label:"Speed"; value:root.ethConnected?(root.ethConnected.speed||""):"" }
-                                    InfoPair { label:"MAC"; value:root.ethConnected?(root.ethConnected.mac||""):"" }
+                                    InfoPair { label:"IP"; value:(root.ethConnected&&root.ethConnected.ip)?root.ethConnected.ip:(SysBridge.networkIp||"...") }
+                                    InfoPair { label:"MAC"; value:(root.ethConnected&&root.ethConnected.mac)?root.ethConnected.mac:"..." }
+                                    InfoPair {
+                                        label:"Link"
+                                        value:(root.ethConnected&&root.ethConnected.speed)?root.ethConnected.speed:"..."
+                                        visible: root.ethConnected&&root.ethConnected.speed&&root.ethConnected.speed!==""
+                                    }
+                                }
+                                SpeedRow {
+                                    Layout.leftMargin: 32; Layout.topMargin: 2
+                                    downBytes: SysBridge.networkDownBytes
+                                    upBytes: SysBridge.networkUpBytes
                                 }
                             }
                         }
@@ -594,6 +648,11 @@ Item {
                                     InfoPair { label:"IP";     value:root.wifiConnected?(root.wifiConnected.ip||"..."):"" }
                                     InfoPair { label:"Security"; value:root.wifiConnected?(root.wifiConnected.security||"Open"):"" }
                                     InfoPair { label:"Band";   value:root.wifiConnected?(root.wifiConnected.freq||""):""; visible:root.wifiConnected&&root.wifiConnected.freq }
+                                }
+                                SpeedRow {
+                                    Layout.leftMargin: 32; Layout.topMargin: 2
+                                    downBytes: SysBridge.networkDownBytes
+                                    upBytes: SysBridge.networkUpBytes
                                 }
                             }
                             MouseArea { id:wifiCardMa; anchors.fill:parent; hoverEnabled:true
@@ -977,5 +1036,9 @@ Item {
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+        root.pollNow()
     }
 }

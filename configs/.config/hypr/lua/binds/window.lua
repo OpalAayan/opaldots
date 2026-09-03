@@ -21,21 +21,24 @@ hl.bind("SUPER + ALT + space", hl.dsp.window.float(), { description = "Toggle Fl
 
 -- Smart Float (native Lua, no IPC)
 hl.bind("SUPER + V", function()
-	smart_float.toggle()
+    smart_float.toggle()
 end, { description = "Toggle Smart Float" })
+
+-- Fullscreen
+hl.bind("F11", hl.dsp.window.fullscreen({ action = "toggle" }), { description = "Toggle Fullscreen" })
 
 -- Smart Float with mouse middle-click
 hl.bind("mouse:274", function()
-	smart_float.toggle()
+    smart_float.toggle()
 end, { description = "Smart Float with Mouse (Scroll Button)" })
 
 -- Smart Split / Shuffle
 
 hl.bind("SUPER + J", function()
-	smart_split.shuffle("j")
+    smart_split.shuffle("j")
 end, { description = "Shuffle Vertical" })
 hl.bind("SUPER + K", function()
-	smart_split.shuffle("k")
+    smart_split.shuffle("k")
 end, { description = "Shuffle Horizontal" })
 --*================================================================*--
 --                       FOCUS MOVEMENT                              --
@@ -52,24 +55,24 @@ hl.bind("SUPER + down", hl.dsp.focus({ direction = "d" }), { description = "Focu
 --*================================================================*--
 
 hl.bind(
-	"SUPER + CTRL + right",
-	hl.dsp.window.resize({ x = 20, y = 0, relative = true }),
-	{ description = "Resize Outwards [Right]", repeating = true }
+    "SUPER + CTRL + right",
+    hl.dsp.window.resize({ x = 20, y = 0, relative = true }),
+    { description = "Resize Outwards [Right]", repeating = true }
 )
 hl.bind(
-	"SUPER + CTRL + left",
-	hl.dsp.window.resize({ x = -20, y = 0, relative = true }),
-	{ description = "Resize Inwards [Left]", repeating = true }
+    "SUPER + CTRL + left",
+    hl.dsp.window.resize({ x = -20, y = 0, relative = true }),
+    { description = "Resize Inwards [Left]", repeating = true }
 )
 hl.bind(
-	"SUPER + CTRL + up",
-	hl.dsp.window.resize({ x = 0, y = -20, relative = true }),
-	{ description = "Resize Upwards [Up]", repeating = true }
+    "SUPER + CTRL + up",
+    hl.dsp.window.resize({ x = 0, y = -20, relative = true }),
+    { description = "Resize Upwards [Up]", repeating = true }
 )
 hl.bind(
-	"SUPER + CTRL + down",
-	hl.dsp.window.resize({ x = 0, y = 20, relative = true }),
-	{ description = "Resize Downwards [Down]", repeating = true }
+    "SUPER + CTRL + down",
+    hl.dsp.window.resize({ x = 0, y = 20, relative = true }),
+    { description = "Resize Downwards [Down]", repeating = true }
 )
 
 --*================================================================*--
@@ -82,13 +85,13 @@ hl.bind("CTRL + ALT + left", hl.dsp.focus({ workspace = "r-1" }), { description 
 
 -- Switch workspaces with SUPER + [0-9]
 for i = 1, 10 do
-	local key = i % 10
-	hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = tostring(i) }), { description = "Go to Workspace " .. i })
-	hl.bind(
-		"SUPER + SHIFT + " .. key,
-		hl.dsp.window.move({ workspace = tostring(i) }),
-		{ description = "Move to Workspace " .. i }
-	)
+    local key = i % 10
+    hl.bind("SUPER + " .. key, hl.dsp.focus({ workspace = tostring(i) }), { description = "Go to Workspace " .. i })
+    hl.bind(
+        "SUPER + SHIFT + " .. key,
+        hl.dsp.window.move({ workspace = tostring(i) }),
+        { description = "Move to Workspace " .. i }
+    )
 end
 
 --*================================================================*--

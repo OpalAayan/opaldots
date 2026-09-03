@@ -12,15 +12,9 @@ ShellRoot {
             right: true
         }
         color: "transparent"
+        focusable: false
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
-
-        // Delay setting OnDemand by 1s to prevent Hyprland from stealing focus on startup
-        Timer {
-            interval: 1000
-            running: true
-            onTriggered: bar.WlrLayershell.keyboardFocus = WlrKeyboardFocus.OnDemand
-        }
         
         // Zero margins for a true full-width solid bar
         margins {

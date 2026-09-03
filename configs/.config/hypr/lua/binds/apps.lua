@@ -84,3 +84,13 @@ hl.bind(
 
 -- Example
 hl.bind("SUPER + SHIFT + f", hl.dsp.exec_cmd("firefox -P secpr", { workspace = "special silent" }))
+
+--*================================================================*--
+--                     WIDGET MANAGER                                --
+--*================================================================*--
+
+hl.bind(
+	"SUPER + ALT + R",
+	hl.dsp.exec_cmd(v.home .. "/.config/fuzzel/scripts/widget-manager.sh"),
+	{ description = "Widget Manager (Fuzzel)" }
+)

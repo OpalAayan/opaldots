@@ -177,7 +177,7 @@ hl.bind(
 hl.bind(
     "SUPER + s",
     hl.dsp.exec_cmd(
-        "grim -o \"$(hyprctl activeworkspace -j | jq -r '.monitor')\" - | wl-copy && paplay "
+        "grim -c -o \"$(hyprctl activeworkspace -j | jq -r '.monitor')\" - | wl-copy && paplay "
         .. ss_sound
         .. " && notify-send -t 2000 'Screenshot Copied' 'Focused monitor copied to clipboard.'"
     ),
