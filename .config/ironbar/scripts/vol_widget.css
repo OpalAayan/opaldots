@@ -1,0 +1,225 @@
+/* Android M3 Purplish GTK4 Stylesheet for Ironbar Volume Mixer Widget */
+
+@define-color m3_bg          #141318;
+@define-color m3_pill        #221F25;
+@define-color m3_pill_hover  #2D2932;
+@define-color m3_unactive    #37343B;
+@define-color m3_active      #D0BCFF;
+@define-color m3_alt         #C0D1F7;
+@define-color m3_on_active   #141318;
+@define-color m3_text        #E6E0E9;
+@define-color m3_subtext     #CAC4D0;
+@define-color m3_outline     #938F99;
+@define-color red            #f38ba8;
+
+* {
+    font-family: "JetBrainsMono Nerd Font Propo", "JetBrainsMono Nerd Font", "JetBrains Mono Nerd Font", monospace;
+    font-size: 13px;
+    font-weight: bold;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+window.vol-window,
+window.vol-window.background,
+.vol-backdrop {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+
+.vol-popup {
+    background-color: @m3_bg;
+    background-image: none;
+    color: @m3_text;
+    border: 1px solid rgba(208, 188, 255, 0.16);
+    border-radius: 24px;
+    padding: 14px;
+}
+
+.vol-card {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 12px 14px;
+}
+
+.vol-section-title {
+    color: @m3_active;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.vol-title {
+    color: @m3_text;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.vol-sub {
+    color: @m3_subtext;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.vol-pct {
+    color: @m3_active;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 44px;
+}
+
+.vol-pct.muted {
+    color: @red;
+}
+
+.vol-icon-btn {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    border-radius: 99px;
+    font-size: 14px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.vol-icon-btn:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.vol-mute-btn {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+    border-radius: 99px;
+    font-size: 15px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.vol-mute-btn:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.vol-mute-btn.muted {
+    background-color: rgba(243, 139, 168, 0.16);
+    color: @red;
+}
+
+.vol-mute-btn.muted:hover {
+    background-color: @red;
+    color: @m3_on_active;
+}
+
+/* Thick Android M3 Slider */
+scale.vol-scale {
+    padding: 0;
+    min-height: 26px;
+}
+
+scale.vol-scale > trough {
+    background-color: @m3_unactive;
+    background-image: none;
+    border: none;
+    border-radius: 12px;
+    min-height: 22px;
+}
+
+scale.vol-scale > trough > highlight {
+    background-color: @m3_active;
+    background-image: none;
+    border: none;
+    border-radius: 12px;
+    min-height: 22px;
+}
+
+scale.vol-scale.muted > trough > highlight {
+    background-color: @m3_outline;
+}
+
+scale.vol-scale > trough > slider {
+    background-color: @m3_active;
+    background-image: none;
+    border: 3px solid @m3_pill;
+    border-radius: 4px;
+    min-width: 7px;
+    min-height: 28px;
+    margin: -3px 0;
+    box-shadow: none;
+}
+
+scale.vol-scale.muted > trough > slider {
+    background-color: @m3_outline;
+}
+
+/* Sink DropDown */
+dropdown.vol-dropdown > button {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    border-radius: 14px;
+    padding: 7px 12px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+dropdown.vol-dropdown > button:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+dropdown.vol-dropdown > button label {
+    color: inherit;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+dropdown.vol-dropdown popover > contents {
+    background-color: @m3_pill;
+    background-image: none;
+    border: 1px solid rgba(208, 188, 255, 0.20);
+    border-radius: 16px;
+    padding: 6px;
+}
+
+dropdown.vol-dropdown popover row {
+    border-radius: 10px;
+    padding: 6px 10px;
+    color: @m3_text;
+}
+
+dropdown.vol-dropdown popover row:hover,
+dropdown.vol-dropdown popover row:selected {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+dropdown.vol-dropdown popover row:hover label,
+dropdown.vol-dropdown popover row:selected label {
+    color: @m3_on_active;
+}
+
+/* Scrollbar */
+.vol-scroll scrollbar {
+    background-color: transparent;
+    border: none;
+}
+
+.vol-scroll scrollbar slider {
+    background-color: @m3_unactive;
+    border-radius: 99px;
+    min-width: 5px;
+    min-height: 24px;
+}
+
+.vol-scroll scrollbar slider:hover {
+    background-color: @m3_outline;
+}

@@ -1,0 +1,386 @@
+/* Android M3 Purplish GTK4 Stylesheet for Ironbar Bluetooth Widget */
+
+@define-color m3_bg          #141318;
+@define-color m3_pill        #221F25;
+@define-color m3_pill_hover  #2D2932;
+@define-color m3_unactive    #37343B;
+@define-color m3_active      #D0BCFF;
+@define-color m3_alt         #C0D1F7;
+@define-color m3_on_active   #141318;
+@define-color m3_text        #E6E0E9;
+@define-color m3_subtext     #CAC4D0;
+@define-color m3_outline     #938F99;
+@define-color green          #a6e3a1;
+@define-color yellow         #f9e2af;
+@define-color red            #f38ba8;
+
+* {
+    font-family: "JetBrainsMono Nerd Font Propo", "JetBrainsMono Nerd Font", "JetBrains Mono Nerd Font", monospace;
+    font-size: 13px;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+window.bt-window,
+window.bt-window.background,
+.bt-backdrop {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+
+.bt-popup {
+    background-color: @m3_bg;
+    background-image: none;
+    color: @m3_text;
+    border: 1px solid rgba(208, 188, 255, 0.16);
+    border-radius: 24px;
+    padding: 14px;
+}
+
+.bt-title {
+    color: @m3_text;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.bt-subtitle {
+    color: @m3_subtext;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.bt-section-title {
+    color: @m3_active;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.bt-muted {
+    color: @m3_subtext;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.bt-header-card {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 10px 14px;
+}
+
+.bt-card,
+.bt-details-card {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 14px;
+}
+
+.bt-device-row {
+    background-color: @m3_pill;
+    border-radius: 22px;
+    padding: 9px 12px;
+    transition: background-color 150ms ease;
+}
+
+.bt-device-row:hover {
+    background-color: @m3_pill_hover;
+}
+
+.bt-row-clickable {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 14px;
+}
+
+.bt-row-clickable:hover {
+    background-color: transparent;
+}
+
+.bt-device-icon {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    border-radius: 99px;
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 17px;
+    font-weight: normal;
+}
+
+.bt-device-icon.connected {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.bt-hero-icon {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    border-radius: 99px;
+    min-width: 68px;
+    min-height: 68px;
+    font-size: 28px;
+    font-weight: normal;
+}
+
+.bt-hero-icon.connected {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.bt-chevron {
+    color: @m3_outline;
+    font-size: 15px;
+    margin-left: 6px;
+    margin-right: 4px;
+}
+
+.bt-icon-btn {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    border-radius: 99px;
+    font-size: 14px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.bt-icon-btn:hover,
+.bt-icon-btn.active {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.bt-btn-primary {
+    background-color: @m3_active;
+    background-image: none;
+    color: @m3_on_active;
+    border: none;
+    border-radius: 99px;
+    padding: 8px 16px;
+    font-weight: bold;
+    transition: background-color 150ms ease;
+}
+
+.bt-btn-primary:hover {
+    background-color: @m3_alt;
+}
+
+.bt-btn-primary:disabled {
+    background-color: @m3_unactive;
+    color: @m3_outline;
+}
+
+.bt-btn-secondary {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    border-radius: 99px;
+    padding: 8px 14px;
+    font-weight: bold;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.bt-btn-secondary:hover {
+    background-color: @m3_pill_hover;
+    color: @m3_active;
+}
+
+.bt-btn-danger {
+    background-color: rgba(243, 139, 168, 0.16);
+    background-image: none;
+    color: @red;
+    border: none;
+    border-radius: 99px;
+    padding: 8px 14px;
+    font-weight: bold;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.bt-btn-danger:hover {
+    background-color: @red;
+    color: @m3_on_active;
+}
+
+.bt-btn-small {
+    padding: 5px 12px;
+    font-size: 12px;
+    min-height: 26px;
+    border-radius: 99px;
+}
+
+.bt-chip {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_subtext;
+    border: none;
+    border-radius: 99px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    min-height: 24px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.bt-chip:hover {
+    background-color: @m3_pill_hover;
+    color: @m3_text;
+}
+
+.bt-chip:checked,
+.bt-chip.active {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.bt-entry {
+    background-color: @m3_pill;
+    background-image: none;
+    color: @m3_text;
+    caret-color: @m3_active;
+    border: 1px solid rgba(208, 188, 255, 0.16);
+    border-radius: 16px;
+    padding: 8px 12px;
+    min-height: 36px;
+}
+
+.bt-entry:focus {
+    border: 1px solid @m3_active;
+}
+
+.bt-entry placeholder {
+    color: @m3_outline;
+}
+
+/* Native GTK4 Switch styled as clean Android M3 Pill Switch */
+switch.bt-switch {
+    background-color: @m3_pill;
+    background-image: none;
+    border: 2px solid @m3_outline;
+    border-radius: 99px;
+    min-width: 44px;
+    min-height: 24px;
+    padding: 2px;
+    transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+switch.bt-switch:checked {
+    background-color: @m3_active;
+    border: 2px solid @m3_active;
+}
+
+switch.bt-switch:disabled {
+    opacity: 0.5;
+}
+
+switch.bt-switch > slider {
+    background-color: @m3_outline;
+    background-image: none;
+    border: none;
+    border-radius: 99px;
+    min-width: 16px;
+    min-height: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+switch.bt-switch:checked > slider {
+    background-color: @m3_on_active;
+}
+
+switch.bt-switch > image {
+    opacity: 0;
+    min-width: 0;
+    min-height: 0;
+}
+
+.bt-banner {
+    border-radius: 16px;
+    padding: 9px 12px;
+    border: 1px solid rgba(208, 188, 255, 0.22);
+    background-color: rgba(208, 188, 255, 0.10);
+}
+
+.bt-banner.info {
+    border-color: rgba(208, 188, 255, 0.28);
+    background-color: rgba(208, 188, 255, 0.12);
+}
+
+.bt-banner.success {
+    border-color: rgba(166, 227, 161, 0.35);
+    background-color: rgba(166, 227, 161, 0.12);
+}
+
+.bt-banner.error {
+    border-color: rgba(243, 139, 168, 0.38);
+    background-color: rgba(243, 139, 168, 0.14);
+}
+
+.bt-banner-text {
+    color: @m3_text;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.bt-badge {
+    border-radius: 99px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    background-color: @m3_unactive;
+    color: @m3_text;
+}
+
+.bt-bat-good {
+    background-color: rgba(166, 227, 161, 0.18);
+    color: @green;
+}
+
+.bt-bat-mid {
+    background-color: rgba(249, 226, 175, 0.18);
+    color: @yellow;
+}
+
+.bt-bat-low {
+    background-color: rgba(243, 139, 168, 0.20);
+    color: @red;
+}
+
+.bt-detail-key {
+    color: @m3_subtext;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.bt-detail-val {
+    color: @m3_text;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.bt-divider {
+    background-color: rgba(255, 255, 255, 0.06);
+    min-height: 1px;
+}
+
+.bt-scroll scrollbar {
+    background-color: transparent;
+    border: none;
+}
+
+.bt-scroll scrollbar slider {
+    background-color: @m3_unactive;
+    border-radius: 99px;
+    min-width: 5px;
+    min-height: 24px;
+}
+
+.bt-scroll scrollbar slider:hover {
+    background-color: @m3_outline;
+}

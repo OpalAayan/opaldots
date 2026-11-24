@@ -1,0 +1,22 @@
+--//================================================================//
+--//                    WORKSPACE RULES                             //
+--//  Default workspace-to-monitor pinning.                         //
+--//================================================================//
+
+-- Monitor descriptors (from hyprctl monitors)
+local laptop = "desc:China Star Optoelectronics Technology Co. Ltd MNG007QX2-5"
+local external = "desc:LG Electronics LG ULTRAGEAR 602NTXRFT594"
+
+-- ── Laptop Monitor (workspaces 1-5) ──
+hl.workspace_rule({ workspace = "1", monitor = laptop, default = true })
+hl.workspace_rule({ workspace = "2", monitor = laptop })
+hl.workspace_rule({ workspace = "3", monitor = laptop })
+hl.workspace_rule({ workspace = "4", monitor = laptop })
+hl.workspace_rule({ workspace = "5", monitor = laptop })
+
+-- ── External Monitor (workspaces 6-10) ──
+hl.workspace_rule({ workspace = "6", monitor = external, default = true })
+hl.workspace_rule({ workspace = "7", monitor = external })
+hl.workspace_rule({ workspace = "8", monitor = external })
+hl.workspace_rule({ workspace = "9", monitor = external })
+hl.workspace_rule({ workspace = "10", monitor = external })

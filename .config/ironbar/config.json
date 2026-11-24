@@ -1,0 +1,632 @@
+{
+  "$schema": "https://f.jstanger.dev/github/ironbar/schema.json",
+  "position": "top",
+  "height": 30,
+  "layer": "top",
+  "anchor_to_edges": true,
+  "exclusive_zone": true,
+  "popup_gap": 6,
+  "popup_autohide": true,
+  "margin": {
+    "top": 3,
+    "left": 3,
+    "right": 3,
+    "bottom": 0
+  },
+
+  "start": [
+    {
+      "type": "custom",
+      "name": "launcher",
+      "class": "launcher",
+      "tooltip": "App Launcher",
+      "bar": [
+        {
+          "type": "button",
+          "name": "launcher-btn",
+          "class": "launcher-btn",
+          "label": "󰣇",
+          "on_click": "!rofi -show drun -show-icons"
+        }
+      ]
+    },
+    {
+      "type": "sys_info",
+      "name": "sysinfo",
+      "class": "sysinfo",
+      "on_click_left": "~/.config/ironbar/scripts/btop-floating.sh",
+      "tooltip": "System Monitor (Click to open btop)",
+      "interval": {
+        "cpu": 2,
+        "temps": 2,
+        "memory": 3,
+        "disks": 60
+      },
+      "format": [
+        "<span color='#cba6f7'></span> {cpu_percent:1.0}%",
+        "<span color='#a6e3a1'></span> {memory_percent:1.0}%",
+        "<span color='#89dceb'></span> {temp_c:1.0}°C"
+      ]
+    },
+    {
+      "type": "sys_info",
+      "name": "sysinfo-disk",
+      "class": "sysinfo",
+      "on_click_left": "baobab",
+      "tooltip": "Disk Usage Analyzer (Click to open baobab)",
+      "interval": {
+        "disks": 60
+      },
+      "format": [
+        "<span color='#f9e2af'></span> {disk_percent@/:1.0}%"
+      ]
+    }
+  ],
+
+  "center": [
+    {
+      "type": "workspaces",
+      "name": "workspaces",
+      "class": "workspaces",
+      "favorites": ["1", "2", "3", "4", "5"],
+      "format": "{name}",
+      "sort": "index",
+      "all_monitors": false
+    }
+  ],
+
+  "end": [
+    {
+      "type": "clock",
+      "name": "clock-date",
+      "class": "clock-date",
+      "format": "<span color='#94e2d5'></span> %a %d %b",
+      "format_popup": "%B %Y",
+      "show_week_numbers": false
+    },
+    {
+      "type": "clock",
+      "name": "clock-time",
+      "class": "clock-time",
+      "format": "<span color='#94e2d5'></span> %I:%M:%S %p",
+      "disable_popup": true,
+      "tooltip": "Might die soon~"
+    },
+    {
+      "type": "custom",
+      "name": "nightlight",
+      "class": "nightlight",
+      "tooltip": "Night Light: {{3000:~/.config/ironbar/scripts/nightlight_control.sh tooltip}}",
+      "on_click_right": "~/.config/ironbar/scripts/nightlight_control.sh toggle",
+      "on_scroll_up": "~/.config/ironbar/scripts/nightlight_control.sh increase",
+      "on_scroll_down": "~/.config/ironbar/scripts/nightlight_control.sh decrease",
+      "bar": [
+        {
+          "type": "button",
+          "name": "nightlight-btn",
+          "class": "nightlight-btn",
+          "label": "󰖔",
+          "on_click": "popup:toggle"
+        }
+      ],
+      "popup": [
+        {
+          "type": "box",
+          "orientation": "vertical",
+          "class": "slider-popup",
+          "widgets": [
+            {
+              "type": "box",
+              "orientation": "vertical",
+              "class": "slider-popup-card",
+              "widgets": [
+                {
+                  "type": "box",
+                  "orientation": "horizontal",
+                  "valign": "center",
+                  "class": "slider-popup-header",
+                  "widgets": [
+                    {
+                      "type": "label",
+                      "class": "slider-popup-title",
+                      "halign": "start",
+                      "label": "󰖔  Night Light"
+                    },
+                    {
+                      "type": "label",
+                      "class": "slider-popup-value",
+                      "halign": "end",
+                      "label": "{{2000:~/.config/ironbar/scripts/nightlight_control.sh temp}}K • {{2000:~/.config/ironbar/scripts/nightlight_control.sh subtitle}}"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "orientation": "horizontal",
+                  "valign": "center",
+                  "class": "slider-row",
+                  "widgets": [
+                    {
+                      "type": "button",
+                      "class": "slider-icon",
+                      "label": "󰖔",
+                      "tooltip": "Toggle Night Light",
+                      "on_click": "!~/.config/ironbar/scripts/nightlight_control.sh toggle"
+                    },
+                    {
+                      "type": "slider",
+                      "class": "popup-slider",
+                      "length": 220,
+                      "min": 2500,
+                      "max": 6500,
+                      "step": 50,
+                      "show_label": false,
+                      "value": "2000:~/.config/ironbar/scripts/nightlight_control.sh temp",
+                      "on_change": "!~/.config/ironbar/scripts/nightlight_control.sh set ${0%.*}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "custom",
+      "name": "brightness",
+      "class": "brightness",
+      "tooltip": "Brightness: {{2000:~/.config/ironbar/scripts/brightness_ironbar.sh percent}}%",
+      "on_scroll_up": "~/.config/ironbar/scripts/brightness_ironbar.sh up",
+      "on_scroll_down": "~/.config/ironbar/scripts/brightness_ironbar.sh down",
+      "bar": [
+        {
+          "type": "button",
+          "name": "brightness-btn",
+          "class": "brightness-btn",
+          "label": "󱞖",
+          "on_click": "popup:toggle"
+        }
+      ],
+      "popup": [
+        {
+          "type": "box",
+          "orientation": "vertical",
+          "class": "slider-popup",
+          "widgets": [
+            {
+              "type": "box",
+              "orientation": "vertical",
+              "class": "slider-popup-card",
+              "widgets": [
+                {
+                  "type": "box",
+                  "orientation": "horizontal",
+                  "valign": "center",
+                  "class": "slider-popup-header",
+                  "widgets": [
+                    {
+                      "type": "label",
+                      "class": "slider-popup-title",
+                      "halign": "start",
+                      "label": "󰃠  Brightness"
+                    },
+                    {
+                      "type": "label",
+                      "class": "slider-popup-value",
+                      "halign": "end",
+                      "label": "{{2000:~/.config/ironbar/scripts/brightness_ironbar.sh percent}}%"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "orientation": "horizontal",
+                  "valign": "center",
+                  "class": "slider-row",
+                  "widgets": [
+                    {
+                      "type": "button",
+                      "class": "slider-icon",
+                      "label": "󰃠",
+                      "tooltip": "Show current brightness",
+                      "on_click": "!~/.config/ironbar/scripts/brightness_ironbar.sh get"
+                    },
+                    {
+                      "type": "slider",
+                      "class": "popup-slider",
+                      "length": 220,
+                      "min": 1,
+                      "max": 100,
+                      "step": 3,
+                      "show_label": false,
+                      "value": "2000:brightnessctl -m | cut -d, -f4 | tr -d %",
+                      "on_change": "!brightnessctl set ${0%.*}%"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "custom",
+      "name": "network",
+      "class": "network",
+      "tooltip": "Network: {{2000:~/.config/ironbar/scripts/network_status.sh name}}",
+      "on_click_right": "~/.config/ironbar/scripts/nmtui-floating.sh",
+      "bar": [
+        {
+          "type": "button",
+          "name": "network-btn",
+          "class": "network-btn",
+          "label": "{{2000:~/.config/ironbar/scripts/network_status.sh icon}}",
+          "on_click": "popup:toggle"
+        }
+      ],
+      "popup": [
+        {
+          "type": "box",
+          "orientation": "vertical",
+          "class": "net-root",
+          "widgets": [
+            {
+              "type": "box",
+              "orientation": "horizontal",
+              "valign": "center",
+              "class": "net-header",
+              "widgets": [
+                {
+                  "type": "box",
+                  "orientation": "horizontal",
+                  "halign": "start",
+                  "valign": "center",
+                  "class": "net-title-group",
+                  "widgets": [
+                    {
+                      "type": "label",
+                      "class": "icon-active",
+                      "label": "{{5000:~/.config/ironbar/scripts/network_status.sh icon}}"
+                    },
+                    {
+                      "type": "label",
+                      "class": "net-title-text",
+                      "justify": "left",
+                      "label": "<b>NetworkManager</b>\n<span size='small' alpha='75%'>{{5000:~/.config/ironbar/scripts/network_status.sh subtitle}}</span>"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "orientation": "horizontal",
+                  "halign": "end",
+                  "valign": "center",
+                  "class": "cc-session",
+                  "widgets": [
+                    {
+                      "type": "button",
+                      "class": "session-btn",
+                      "label": "󰑐",
+                      "tooltip": "Rescan Wi-Fi Networks",
+                      "on_click": "!~/.config/ironbar/scripts/network_status.sh rescan"
+                    },
+                    {
+                      "type": "button",
+                      "class": "session-btn",
+                      "label": "󰒓",
+                      "tooltip": "Open NetworkManager TUI",
+                      "on_click": "!~/.config/ironbar/scripts/nmtui-floating.sh"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "orientation": "vertical",
+              "class": "net-card",
+              "widgets": [
+                {
+                  "type": "label",
+                  "class": "net-details",
+                  "justify": "left",
+                  "label": "{{3000:~/.config/ironbar/scripts/network_status.sh details}}"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "orientation": "vertical",
+              "class": "net-card",
+              "widgets": [
+                {
+                  "type": "label",
+                  "class": "net-section-title",
+                  "justify": "left",
+                  "label": "Available Wi-Fi Networks"
+                },
+                {
+                  "type": "label",
+                  "class": "net-wifi-list",
+                  "justify": "left",
+                  "label": "{{5000:~/.config/ironbar/scripts/network_status.sh wifi_list}}"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "orientation": "horizontal",
+              "class": "net-actions-row",
+              "widgets": [
+                {
+                  "type": "button",
+                  "class": "net-action-tile",
+                  "on_click": "!~/.config/ironbar/scripts/network_status.sh toggle-wifi",
+                  "widgets": [
+                    {
+                      "type": "box",
+                      "orientation": "horizontal",
+                      "halign": "start",
+                      "valign": "center",
+                      "widgets": [
+                        {
+                          "type": "label",
+                          "class": "icon-active",
+                          "label": "󰤨"
+                        },
+                        {
+                          "type": "label",
+                          "class": "tile-text",
+                          "justify": "left",
+                          "label": "<b>Wi-Fi Radio</b>\n<span size='small' alpha='75%'>{{3000:~/.config/ironbar/scripts/network_status.sh wifi_status}}</span>"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "custom",
+      "name": "bluetooth",
+      "class": "bluetooth",
+      "tooltip": "{{watch:~/.config/ironbar/scripts/bt_backend.py watch tooltip}}",
+      "on_click_right": "blueberry",
+      "on_click_middle": "~/.config/ironbar/scripts/bt_backend.py power toggle",
+      "bar": [
+        {
+          "type": "button",
+          "name": "bluetooth-btn",
+          "class": "bluetooth-btn",
+          "label": "{{watch:~/.config/ironbar/scripts/bt_backend.py watch icon}}",
+          "on_click": "!~/.config/ironbar/scripts/bt_widget.py --toggle"
+        }
+      ]
+    },
+    {
+      "type": "volume",
+      "name": "volume",
+      "class": "volume",
+      "format": "<span color='#fab387'>{icon}</span> {percentage}%",
+      "mute_format": "<span color='#6c7086'>{icon}</span> Muted",
+      "max_volume": 275,
+      "disable_popup": true,
+      "use_default_profiles": false,
+      "popup_orientation": "vertical",
+      "show_sinks": true,
+      "show_sources": false,
+      "sink_slider_orientation": "horizontal",
+      "source_slider_orientation": "horizontal",
+      "on_click_left": "~/.config/ironbar/scripts/vol_widget.py --toggle",
+      "on_scroll_up": "~/.config/ironbar/scripts/scroll_volume.sh up",
+      "on_scroll_down": "~/.config/ironbar/scripts/scroll_volume.sh down",
+      "on_click_right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+      "icons": {
+        "volume": "",
+        "muted": "󰖁",
+        "mic_volume": "",
+        "mic_muted": ""
+      },
+      "profiles": {
+        "exact_100": {
+          "when": 100.0,
+          "icons": {
+            "volume": ""
+          }
+        },
+        "high": {
+          "when": 99.9,
+          "icons": {
+            "volume": "󱑽"
+          }
+        },
+        "medium": {
+          "when": 59.9,
+          "icons": {
+            "volume": ""
+          }
+        },
+        "low": {
+          "when": 41.9,
+          "icons": {
+            "volume": ""
+          }
+        },
+        "zero": {
+          "when": 0.9,
+          "icons": {
+            "volume": ""
+          }
+        }
+      }
+    },
+    {
+      "type": "custom",
+      "name": "battery",
+      "class": "battery",
+      "tooltip": "{{5000:~/.config/ironbar/scripts/battery_status.sh tooltip}}",
+      "on_click_right": "wattage",
+      "bar": [
+        {
+          "type": "button",
+          "name": "battery-btn",
+          "class": "battery-btn",
+          "label": "{{5000:~/.config/ironbar/scripts/battery_status.sh icon}}",
+          "on_click": "popup:toggle"
+        }
+      ],
+      "popup": [
+        {
+          "type": "box",
+          "orientation": "vertical",
+          "class": "bat-root",
+          "widgets": [
+            {
+              "type": "box",
+              "orientation": "horizontal",
+              "valign": "center",
+              "class": "bat-header",
+              "widgets": [
+                {
+                  "type": "box",
+                  "orientation": "horizontal",
+                  "halign": "start",
+                  "valign": "center",
+                  "class": "bat-title-group",
+                  "widgets": [
+                    {
+                      "type": "label",
+                      "class": "icon-active",
+                      "label": "{{5000:~/.config/ironbar/scripts/battery_status.sh popup_icon}}"
+                    },
+                    {
+                      "type": "label",
+                      "class": "bat-title-text",
+                      "justify": "left",
+                      "label": "<b>{{5000:~/.config/ironbar/scripts/battery_status.sh title}}</b>\n<span size='small' alpha='75%'>{{5000:~/.config/ironbar/scripts/battery_status.sh subtitle}}</span>"
+                    }
+                  ]
+                },
+                {
+                  "type": "box",
+                  "orientation": "horizontal",
+                  "halign": "end",
+                  "valign": "center",
+                  "class": "cc-session",
+                  "widgets": [
+                    {
+                      "type": "button",
+                      "class": "session-btn",
+                      "label": "󱐋",
+                      "tooltip": "Open Wattage",
+                      "on_click": "!wattage"
+                    },
+                    {
+                      "type": "button",
+                      "class": "session-btn",
+                      "label": "󰨇",
+                      "tooltip": "Open Mission Center",
+                      "on_click": "!missioncenter"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "orientation": "vertical",
+              "class": "bat-card",
+              "widgets": [
+                {
+                  "type": "label",
+                  "class": "bat-section-title",
+                  "justify": "left",
+                  "label": "System Battery"
+                },
+                {
+                  "type": "label",
+                  "class": "bat-details",
+                  "justify": "left",
+                  "label": "{{5000:~/.config/ironbar/scripts/battery_status.sh details}}"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "orientation": "vertical",
+              "class": "bat-card",
+              "widgets": [
+                {
+                  "type": "label",
+                  "class": "bat-section-title",
+                  "justify": "left",
+                  "label": "Battery Devices"
+                },
+                {
+                  "type": "label",
+                  "class": "bat-devices-list",
+                  "justify": "left",
+                  "label": "{{5000:~/.config/ironbar/scripts/battery_status.sh devices}}"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "orientation": "horizontal",
+              "class": "bat-actions-row",
+              "widgets": [
+                {
+                  "type": "button",
+                  "class": "bat-action-tile",
+                  "on_click": "!~/.config/ironbar/scripts/power-profile.sh cycle",
+                  "widgets": [
+                    {
+                      "type": "box",
+                      "orientation": "horizontal",
+                      "halign": "start",
+                      "valign": "center",
+                      "widgets": [
+                        {
+                          "type": "label",
+                          "class": "icon-active",
+                          "label": "{{5000:~/.config/ironbar/scripts/power-profile.sh icon}}"
+                        },
+                        {
+                          "type": "label",
+                          "class": "tile-text",
+                          "justify": "left",
+                          "label": "<b>Power Profile</b>\n<span size='small' alpha='75%'>{{5000:~/.config/ironbar/scripts/power-profile.sh subtitle}} • Click to cycle</span>"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "custom",
+      "name": "control-center",
+      "class": "cc",
+      "tooltip": "Quick Settings",
+      "bar": [
+        {
+          "type": "button",
+          "name": "power-btn",
+          "class": "cc-trigger",
+          "label": "⏻",
+          "on_click": "!~/.config/ironbar/scripts/cc_widget.py --toggle"
+        }
+      ]
+    }
+  ]
+}

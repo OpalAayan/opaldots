@@ -1,0 +1,1074 @@
+/* =============================================================================
+ * Ironbar GTK4 Style — Opalshell Bar + Android M3 Purplish Popups
+ * Strict Color Theory:
+ *   main_bg          = #141318  (text: #E6E0E9)
+ *   icon_pill        = #221F25  (text: #E6E0E9)
+ *   icon_unactive_bg = #37343B  (text: #E6E0E9 — Light on Dark)
+ *   icon_active_bg   = #D0BCFF  (text: #141318 — Dark on Light)
+ * ============================================================================= */
+
+@define-color m3_bg          #141318;
+@define-color m3_pill        #221F25;
+@define-color m3_pill_hover  #2D2932;
+@define-color m3_unactive    #37343B;
+@define-color m3_active      #D0BCFF;
+@define-color m3_alt         #C0D1F7;
+@define-color m3_on_active   #141318;
+@define-color m3_text        #E6E0E9;
+@define-color m3_subtext     #CAC4D0;
+@define-color m3_outline     #938F99;
+
+@define-color base     #1e1e2e;
+@define-color mantle   #181825;
+@define-color crust    #11111b;
+@define-color surface0 #313244;
+@define-color surface1 #45475a;
+@define-color surface2 #585b70;
+@define-color overlay0 #6c7086;
+@define-color subtext  #a6adc8;
+@define-color text     #cdd6f4;
+@define-color lavender #b4befe;
+@define-color mauve    #cba6f7;
+@define-color sapphire #74c7ec;
+@define-color blue     #89b4fa;
+@define-color sky      #89dceb;
+@define-color teal     #94e2d5;
+@define-color green    #a6e3a1;
+@define-color yellow   #f9e2af;
+@define-color peach    #fab387;
+@define-color pink     #f5c2e7;
+@define-color red      #f38ba8;
+
+* {
+    font-family: "JetBrainsMono Nerd Font Propo", "JetBrainsMono Nerd Font", "JetBrains Mono Nerd Font", monospace;
+    font-size: 13px;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
+    background-image: none;
+    min-height: 0;
+    min-width: 0;
+}
+
+window,
+.background {
+    background-color: transparent;
+}
+
+/* ── 1. Single Unified Bar  ──────────────── */
+#bar {
+    background-color: rgba(17, 17, 27, 0.98);
+    background-image: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 0 8px;
+    color: @text;
+}
+
+#start,
+#center,
+#end {
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+}
+
+/* Override Ironbar's built-in `#end > * + *` and `.sysinfo > .item + .item` margins */
+#bar #start > * + *,
+#bar #center > * + *,
+#bar #end > * + *,
+#bar .sysinfo > * + *,
+#bar .sysinfo > .item + .item,
+#bar .workspaces > * + * {
+    margin-left: 0;
+}
+
+/* IMPORTANT: Target bar pills explicitly so `#bar` rules NEVER leak into
+   child `popover` windows attached to bar buttons! */
+#start > button,
+#start > * > button,
+#start > * > * > button,
+#center > button,
+#center > * > button,
+#end > button,
+#end > * > button,
+#end > * > * > button,
+#launcher-btn,
+#bar .sysinfo .item,
+#bar .sysinfo > .item + .item,
+#bar .workspaces .item,
+#bar .clock-date,
+#bar .clock-time,
+#nightlight-btn,
+#brightness-btn,
+#network-btn,
+#bluetooth-btn,
+#bar .volume,
+#battery-btn,
+#power-btn {
+    background-color: #26252d;
+    background-image: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: @text;
+    padding: 0 8px;
+    margin: 3px 2px;
+    min-height: 24px;
+    border-radius: 8px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+#start > button:hover,
+#start > * > button:hover,
+#start > * > * > button:hover,
+#end > button:hover,
+#end > * > button:hover,
+#end > * > * > button:hover,
+#launcher-btn:hover,
+#bar .sysinfo .item:hover,
+#bar .workspaces .item:hover,
+#bar .clock-date:hover,
+#bar .clock-time:hover,
+#nightlight-btn:hover,
+#brightness-btn:hover,
+#network-btn:hover,
+#bluetooth-btn:hover,
+#bar .volume:hover,
+#battery-btn:hover,
+#power-btn:hover {
+    background-color: #32303b;
+}
+
+/* Uniform Icon-Only & Workspace Pills (Aligned Square-Pill Geometry) */
+#launcher-btn,
+#bar .workspaces .item,
+#nightlight-btn,
+#brightness-btn,
+#network-btn,
+#bluetooth-btn,
+#battery-btn,
+#power-btn {
+    padding: 0 5px;
+    margin: 3px 2px;
+    min-width: 24px;
+    min-height: 24px;
+    border-radius: 8px;
+}
+
+/* ── 2. Left Bar Modules ─────────────────────────────────── */
+#launcher-btn,
+#launcher-btn > label {
+    color: @blue;
+    font-size: 16px;
+}
+
+#launcher-btn:hover,
+#launcher-btn:hover > label {
+    color: @mauve;
+}
+
+/* 1. Adds breathing room separating the launcher from the stats cluster */
+#bar .sysinfo {
+    margin-left: 10px;
+}
+
+/* 2. Tightens the spacing between the stat pills themselves */
+#bar .sysinfo .item,
+#bar .sysinfo > .item + .item {
+    padding: 0 8px;      /* Reduces width inside each pill (was 8px) */
+    margin: 3px 0px;     /* Drops horizontal gap between pills (was 2px) */
+    color: @text;
+}
+
+#bar .sysinfo .item > label {
+    padding: 0;
+    margin: 0;
+    color: @text;
+}
+
+/* ── 3. Center Workspaces (Icon Pills + Mauve Active Pill) ── */
+.workspaces {
+    background-color: transparent;
+    padding: 0 2px;
+}
+
+#bar .workspaces .item {
+    background-color: #26252d;
+    color: @text;
+    font-size: 13px;
+    font-weight: bold;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0 5px;
+    margin: 3px 2px;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+#bar .workspaces .item > label {
+    color: @text;
+    font-size: 13px;
+}
+
+#bar .workspaces .item.inactive,
+#bar .workspaces .item.inactive > label {
+    color: @subtext;
+    box-shadow: none;
+}
+
+#bar .workspaces .item.visible,
+#bar .workspaces .item.visible > label {
+    color: @text;
+    box-shadow: none;
+}
+
+#bar .workspaces .item:hover {
+    background-color: #32303b;
+    box-shadow: none;
+}
+
+#bar .workspaces .item.focused {
+    background-color: @mauve;
+    color: @crust;
+    min-width: 26px;
+    min-height: 24px;
+    padding: 0 6px;
+    margin: 3px 2px;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+#bar .workspaces .item.focused > label {
+    color: @crust;
+    font-weight: 800;
+}
+
+#bar .workspaces .item.urgent {
+    background-color: rgba(243, 139, 168, 0.22);
+    color: @red;
+    box-shadow: none;
+    animation: badge-pulse-red 1.2s ease-in-out infinite;
+}
+
+#bar .workspaces .item.urgent > label {
+    color: @red;
+}
+
+/* ── 4. Right Bar Modules (Direct `>` Child Selectors) ──── */
+#bar .clock-date,
+#bar .clock-date > label,
+#bar .clock-time,
+#bar .clock-time > label {
+    color: @text;
+}
+
+#bar .clock-date,
+#bar .clock-time {
+    padding: 0 8px;
+    margin: 3px 2px;
+}
+
+#nightlight-btn,
+#nightlight-btn > label {
+    color: @mauve;
+    font-size: 14px;
+}
+
+#nightlight-btn:hover,
+#nightlight-btn:hover > label {
+    color: @peach;
+}
+
+#brightness-btn,
+#brightness-btn > label {
+    color: @yellow;
+    font-size: 14px;
+}
+
+#brightness-btn:hover,
+#brightness-btn:hover > label {
+    color: @pink;
+}
+
+#network-btn,
+#network-btn > label {
+    color: @teal;
+    font-size: 14px;
+}
+
+#bluetooth-btn,
+#bluetooth-btn > label {
+    color: @blue;
+    font-size: 14px;
+}
+
+#bar .volume,
+#bar .volume > label,
+#bar .volume .sink {
+    color: @text;
+}
+
+#bar .volume {
+    padding: 0 8px;
+    margin: 3px 2px;
+}
+
+#battery-btn,
+#battery-btn > label {
+    color: @green;
+    font-size: 14px;
+}
+
+#power-btn,
+#power-btn > label {
+    color: @red;
+    font-size: 14px;
+}
+
+#power-btn:hover,
+#power-btn:hover > label {
+    color: @pink;
+}
+
+/* ── 5. Android M3 Purplish Popup Shell (`#141318`) ──────── */
+popover,
+popover.background {
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+popover > arrow {
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+}
+
+popover > contents {
+    background-color: @m3_bg;
+    background-image: none;
+    color: @m3_text;
+    border: 1px solid rgba(208, 188, 255, 0.14);
+    border-radius: 24px;
+    padding: 14px;
+    margin: 0;
+    box-shadow: none;
+}
+
+.popup,
+.popup-custom,
+.popup-clock,
+.popup-volume,
+.popup-bluetooth {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+/* ── 6. Android M3 Switches & Sliders (Dark on Light / Light on Dark) ── */
+/* OFF Switch: Dark `#221F25` track with `#938F99` border and muted grey knob */
+switch {
+    background-color: @m3_pill;
+    border: 2px solid @m3_outline;
+    border-radius: 99px;
+    min-width: 44px;
+    min-height: 24px;
+    padding: 0;
+    outline: none;
+    background-image: radial-gradient(circle 8px at 12px 50%, @m3_outline 99%, transparent 100%);
+}
+
+/* ON Switch: Bright `#D0BCFF` track with `#D0BCFF` border */
+switch:checked {
+    background-color: @m3_active;
+    border: 2px solid @m3_active;
+    background-image: radial-gradient(circle 9px at calc(100% - 12px) 50%, @m3_on_active 99%, transparent 100%);
+}
+
+/* Hide GTK4's broken internal slider knob (Ironbar calls set_state without set_active) */
+switch > slider,
+switch:checked > slider,
+switch slider,
+switch:checked slider {
+    opacity: 0;
+    background: transparent;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    min-width: 20px;
+    min-height: 20px;
+    margin: 0;
+}
+
+/* Hide GTK4 switch state icons if rendered */
+switch > image,
+switch image {
+    opacity: 0;
+    min-width: 0;
+    min-height: 0;
+}
+
+/* Android M3 Thick Pill Sliders */
+scale {
+    padding: 0;
+    min-height: 28px;
+}
+
+scale > trough,
+scale trough {
+    background-color: @m3_unactive;
+    border: none;
+    border-radius: 12px;
+    min-height: 24px;
+}
+
+scale > trough > highlight,
+scale.horizontal highlight,
+scale highlight {
+    background-color: @m3_active;
+    background-image: none;
+    border: none;
+    border-radius: 12px;
+    min-height: 24px;
+}
+
+scale > trough > slider,
+scale slider {
+    background-color: @m3_active;
+    border: 3px solid @m3_bg;
+    border-radius: 4px;
+    min-width: 7px;
+    min-height: 30px;
+    margin: -3px 0;
+    box-shadow: none;
+}
+
+/* ── 7. Calendar Popup (`.popup-clock`) ──────────────────── */
+.popup-clock {
+    padding: 2px;
+}
+
+.popup-clock .calendar-clock,
+.popup-clock .calendar-clock label {
+    color: @m3_alt;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+calendar {
+    background-color: @m3_pill;
+    color: @m3_text;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+calendar > header {
+    color: @m3_alt;
+    padding-bottom: 6px;
+    border-bottom: 1px solid @m3_unactive;
+}
+
+calendar > header > button,
+calendar > header > button label {
+    background-color: transparent;
+    color: @m3_alt;
+    border-radius: 10px;
+    padding: 2px 6px;
+}
+
+calendar > header > button:hover {
+    background-color: @m3_unactive;
+}
+
+calendar > grid > label.day-name {
+    color: @m3_alt;
+}
+
+calendar > grid > label.other-month {
+    color: @m3_outline;
+}
+
+calendar > grid > label.today,
+.popup-clock .calendar .today {
+    background-color: @m3_unactive;
+    color: @m3_alt;
+    border-radius: 99px;
+}
+
+/* Selected Day: Dark `#141318` on Light `#D0BCFF` */
+calendar > grid > label:selected {
+    background-color: @m3_alt;
+    color: @m3_on_active;
+    border-radius: 99px;
+}
+
+/* ── 8. Volume Popup (`.popup-volume`) ───────────────────── */
+.popup-volume {
+    min-width: 290px;
+}
+
+.popup-volume .device-box {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 12px 14px;
+    margin: 0;
+}
+
+.popup-volume .device-box .device-selector,
+.popup-volume dropdown > button {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    border-radius: 14px;
+    padding: 7px 12px;
+    margin-bottom: 10px;
+}
+
+.popup-volume dropdown > button label {
+    color: @m3_text;
+}
+
+.popup-volume dropdown > button:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.popup-volume dropdown > button:hover label {
+    color: @m3_on_active;
+}
+
+.popup-volume dropdown popover > contents {
+    background-color: @m3_pill;
+    border: 1px solid rgba(208, 188, 255, 0.20);
+    border-radius: 16px;
+    padding: 6px;
+}
+
+.popup-volume dropdown popover row {
+    border-radius: 10px;
+    padding: 6px 10px;
+    color: @m3_text;
+}
+
+.popup-volume dropdown popover row:hover,
+.popup-volume dropdown popover row:selected {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.popup-volume dropdown popover row:hover label,
+.popup-volume dropdown popover row:selected label {
+    color: @m3_on_active;
+}
+
+.popup-volume .device-box .slider {
+    margin: 6px 0 10px 0;
+}
+
+/* Mute Button: Light `#D0BCFF` pill with Dark `#141318` icon */
+.popup-volume .device-box .btn-mute {
+    background-color: @m3_active;
+    color: @m3_on_active;
+    border-radius: 99px;
+    padding: 6px 16px;
+    min-height: 32px;
+}
+
+.popup-volume .device-box .btn-mute label {
+    color: @m3_on_active;
+    font-size: 14px;
+}
+
+.popup-volume .device-box .btn-mute:hover {
+    background-color: @m3_unactive;
+    color: @m3_text;
+}
+
+.popup-volume .device-box .btn-mute:hover label {
+    color: @m3_text;
+}
+
+.popup-volume .apps-box {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.popup-volume .apps-box .app-box {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 10px 14px;
+    margin-top: 8px;
+}
+
+.popup-volume .apps-box .app-box .title,
+.popup-volume .apps-box .app-box .title label {
+    color: @m3_text;
+    margin-bottom: 6px;
+}
+
+/* ── 8b. Night Light & Brightness Slider Popups ─────────── */
+.slider-popup {
+    min-width: 290px;
+}
+
+.slider-popup-card {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 12px 14px;
+    margin: 0;
+}
+
+.slider-popup-header {
+    margin-bottom: 8px;
+}
+
+.slider-popup-title {
+    color: @m3_text;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.slider-popup-value {
+    color: @m3_active;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 12px;
+}
+
+.popup-slider {
+    min-width: 220px;
+}
+
+/* ── 9. Bluetooth Popup (`.popup-bluetooth`) ─────────────── */
+.popup-bluetooth {
+    min-width: 300px;
+}
+
+.popup-bluetooth .header {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+}
+
+.popup-bluetooth .header .switch {
+    margin-right: 12px;
+}
+
+.popup-bluetooth .header .label,
+.popup-bluetooth .header label {
+    color: @m3_text;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.popup-bluetooth .disabled {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 16px;
+    color: @m3_subtext;
+}
+
+.popup-bluetooth .disabled .label,
+.popup-bluetooth .disabled label {
+    color: @m3_subtext;
+}
+
+.popup-bluetooth .devices .box .device {
+    background-color: @m3_pill;
+    border-radius: 22px;
+    padding: 10px 14px;
+    margin: 4px 0;
+}
+
+.popup-bluetooth .devices .box .device:hover {
+    background-color: @m3_pill_hover;
+}
+
+.popup-bluetooth .devices .box .device .icon-box {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    border-radius: 99px;
+    min-width: 20px;
+    min-height: 20px;
+    margin-right: 12px;
+    padding: 10px;
+}
+
+.popup-bluetooth .devices .box .device .icon-box .icon,
+.popup-bluetooth .devices .box .device .icon-box .text-icon,
+.popup-bluetooth .devices .box .device .icon-box .image,
+.popup-bluetooth .devices .box .device .icon-box picture,
+.popup-bluetooth .devices .box .device .icon-box image,
+.popup-bluetooth .devices .box .device .icon-box label {
+    color: @m3_text;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.popup-bluetooth .devices .box .device .status {
+    margin-right: 14px;
+}
+
+.popup-bluetooth .devices .box .device .status .header-label {
+    color: @m3_text;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.popup-bluetooth .devices .box .device .status .footer-label {
+    color: @m3_subtext;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.popup-bluetooth .devices .box .device .switch {
+    margin-left: 8px;
+}
+
+/* ── 10. NetworkManager Popup (`.net-root`) ──────────────── */
+.net-root {
+    min-width: 340px;
+}
+
+.net-header {
+    margin: 2px 4px 10px 4px;
+}
+
+.net-title-group {
+    min-width: 220px;
+}
+
+.net-title-text {
+    color: @m3_text;
+}
+
+.net-card {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 12px 14px;
+    margin: 4px 2px;
+}
+
+.net-details {
+    color: @m3_text;
+}
+
+.net-section-title {
+    color: @m3_active;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.net-wifi-list {
+    color: @m3_text;
+    font-size: 12px;
+}
+
+.net-actions-row {
+    margin-top: 2px;
+}
+
+.net-action-tile {
+    background-color: @m3_pill;
+    color: @m3_text;
+    border-radius: 24px;
+    padding: 9px 14px 9px 10px;
+    margin: 4px 2px 0 2px;
+    min-width: 332px;
+    min-height: 54px;
+    transition: background-color 150ms ease;
+}
+
+.net-action-tile:hover {
+    background-color: @m3_pill_hover;
+}
+
+/* ── 10b. Battery Monitor Popup (`.bat-root`) ────────────── */
+.bat-root {
+    min-width: 340px;
+}
+
+.bat-header {
+    margin: 2px 4px 10px 4px;
+}
+
+.bat-title-group {
+    min-width: 220px;
+}
+
+.bat-title-text {
+    color: @m3_text;
+}
+
+.bat-card {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 12px 14px;
+    margin: 4px 2px;
+}
+
+.bat-section-title {
+    color: @m3_active;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.bat-details {
+    color: @m3_text;
+}
+
+.bat-devices-list {
+    color: @m3_text;
+    font-size: 12px;
+}
+
+.bat-actions-row {
+    margin-top: 2px;
+}
+
+.bat-action-tile {
+    background-color: @m3_pill;
+    color: @m3_text;
+    border-radius: 24px;
+    padding: 9px 14px 9px 10px;
+    margin: 4px 2px 0 2px;
+    min-width: 332px;
+    min-height: 54px;
+    transition: background-color 150ms ease;
+}
+
+.bat-action-tile:hover {
+    background-color: @m3_pill_hover;
+}
+
+/* ── 11. Android M3 Control Center Popup (`.cc-root`) ────── */
+.cc-root {
+    min-width: 382px;
+}
+
+/* Header Row */
+.cc-header {
+    background-color: transparent;
+    padding: 2px 4px;
+    margin: 0 0 10px 0;
+}
+
+.cc-user-group {
+    min-width: 250px;
+}
+
+/* User Avatar: Active `#D0BCFF` circle with Dark `#141318` Arch icon */
+.cc-avatar {
+    background-color: @m3_active;
+    color: @m3_on_active;
+    font-size: 20px;
+    min-width: 42px;
+    min-height: 42px;
+    border-radius: 99px;
+    margin-right: 12px;
+}
+
+.cc-user-text {
+    color: @m3_text;
+}
+
+.cc-session {
+    margin-left: 44px;
+}
+
+/* Session Buttons: `#37343B` circle with Light `#E6E0E9` icon */
+.session-btn {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    margin-left: 6px;
+    border-radius: 99px;
+    font-size: 14px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.session-btn > label {
+    color: @m3_text;
+}
+
+/* Hover: Light `#D0BCFF` circle with Dark `#141318` icon */
+.session-btn:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.session-btn:hover > label {
+    color: @m3_on_active;
+}
+
+.session-danger {
+    background-color: @m3_unactive;
+    color: @red;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    margin-left: 6px;
+    border-radius: 99px;
+    font-size: 14px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.session-danger > label {
+    color: @red;
+}
+
+.session-danger:hover {
+    background-color: @red;
+    color: @m3_on_active;
+}
+
+.session-danger:hover > label {
+    color: @m3_on_active;
+}
+
+/* Slider Rows with Left Circular Icon & Right % Label */
+.cc-sliders {
+    background-color: transparent;
+    padding: 0 4px;
+    margin: 0 0 12px 0;
+}
+
+.slider-row {
+    margin: 6px 0;
+}
+
+.cc-slider {
+    min-width: 400px;
+}
+
+.slider-icon {
+    background-color: @m3_pill;
+    color: @m3_text;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+    margin-right: 12px;
+    border-radius: 99px;
+    font-size: 17px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.slider-icon > label {
+    color: @m3_text;
+}
+
+.slider-icon:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.slider-icon:hover > label {
+    color: @m3_on_active;
+}
+
+.slider-pct {
+    color: @m3_subtext;
+    font-size: 12px;
+    min-width: 46px;
+    margin-left: 8px;
+}
+
+/* 2x3 Android M3 Pill Cards (`#221F25`) */
+.cc-grid {
+    margin: 0;
+}
+
+.cc-col {
+    min-width: 228px;
+}
+
+.tile {
+    background-color: @m3_pill;
+    color: @m3_text;
+    border: none;
+    border-radius: 28px;
+    padding: 9px 16px 9px 11px;
+    margin: 4px;
+    min-width: 220px;
+    min-height: 62px;
+    transition: background-color 150ms ease;
+}
+
+.tile:hover {
+    background-color: @m3_pill_hover;
+}
+
+.tile-text {
+    color: @m3_text;
+}
+
+/* Active Icon Pill (`#D0BCFF` background, `#141318` DARK icon — Dark on Light) */
+.icon-active {
+    background-color: @m3_active;
+    color: @m3_on_active;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 99px;
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+/* Inactive Icon Pill (`#37343B` background, `#E6E0E9` LIGHT icon — Light on Dark) */
+.icon-inactive {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 99px;
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+/* ── 12. Tooltips ────────────────────────────────────────── */
+tooltip,
+tooltip.background {
+    background-color: @m3_pill;
+    border: 1px solid rgba(208, 188, 255, 0.18);
+    border-radius: 10px;
+    padding: 4px 8px;
+}
+
+tooltip label {
+    color: @m3_text;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* ── 13. Animations ──────────────────────────────────────── */
+@keyframes blink {
+    50% { opacity: 0.4; }
+}
+
+@keyframes pulse {
+    50% { opacity: 0.6; }
+}
+
+@keyframes badge-pulse-red {
+    50% { background-color: rgba(243, 139, 168, 0.45); }
+}

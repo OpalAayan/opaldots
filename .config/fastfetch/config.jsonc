@@ -1,0 +1,119 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "display": {
+    "separator": "  ",
+    "color": {
+      "keys": "#ffffff"
+    },
+    "key": {
+      "width": 14
+    },
+    "percent": {
+      "type": 1
+    }
+  },
+  "logo": {
+    "type": "file",
+    "source": "~/.config/fastfetch/jirachi.txt",
+    "padding": {
+      "top": 2,
+      "left": 2,
+      "right": 4
+    }
+  },
+  "modules": [
+    {
+      "type": "title",
+      "color": {
+        "user": "#FF8282",
+        "at": "#666666",
+        "host": "#FFACF3"
+      }
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[90m ───────────────\u001b[0m"
+    },
+    {
+      "type": "os",
+      "key": " 󰣇 OS",
+      "keyColor": "#56B6FF",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "host",
+      "key": " 󰌢 Host",
+      "keyColor": "#BE8CFF",
+      "format": "{name}"
+    },
+    {
+      "type": "kernel",
+      "key": " 󰌽 Kernel",
+      "keyColor": "#FF9E64"
+    },
+    {
+      "type": "packages",
+      "key": " 󰏖 Packages",
+      "keyColor": "#66E880"
+    },
+    {
+      "type": "shell",
+      "key": "  Shell",
+      "keyColor": "#E5D142",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "wm",
+      "key": "  WM",
+      "keyColor": "#45E3CD",
+      "format": "{pretty-name} ({version})"
+    },
+    {
+      "type": "cpu",
+      "key": "  CPU",
+      "keyColor": "#E485F6"
+    },
+    {
+      "type": "gpu",
+      "key": " 󰢮 GPU",
+      "keyColor": "#7A9CFF"
+    },
+    {
+      "type": "display",
+      "key": " 󰍹 Screen",
+      "keyColor": "#FF75A0",
+      "format": "{width}x{height} @ {refresh-rate}Hz"
+    },
+    {
+      "type": "memory",
+      "key": "  Ram",
+      "keyColor": "#94F0AD",
+      "format": "{used} / {total} (\u001b[38;2;255;158;100m{percentage}\u001b[0m)"
+    },
+    {
+      "type": "swap",
+      "key": " 󰓡 Swap",
+      "keyColor": "#F7C77E",
+      "format": "{used} / {total} (\u001b[38;2;229;209;66m{percentage}\u001b[0m) - zram"
+    },
+    {
+      "type": "disk",
+      "key": " 󰋊 Disk",
+      "keyColor": "#56B6FF",
+      "showExternal": true,
+      "showSubvolumes": false,
+      "format": "{size-used} / {size-total} (\u001b[38;2;69;227;205m{size-percentage}\u001b[0m) [{mountpoint}]"
+    },
+    {
+      "type": "uptime",
+      "key": " 󰔚 Uptime",
+      "keyColor": "#FF9E64"
+    },
+    "break",
+    {
+      "type": "custom",
+      "key": " 󰸱 Color",
+      "format": "\u001b[38;2;255;225;86m󰮯 \u001b[38;2;69;201;229m \u001b[38;2;255;99;132m󰊠 \u001b[38;2;74;222;128m󰊠 \u001b[38;2;56;189;248m󰊠 \u001b[38;2;192;132;252m󰊠 \u001b[38;2;255;255;255m󰊠 \u001b[0m"
+    }
+  ]
+}

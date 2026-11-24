@@ -1,0 +1,221 @@
+/* Android M3 Purplish GTK4 Stylesheet for Ironbar Control Center Widget */
+
+@define-color m3_bg          #141318;
+@define-color m3_pill        #221F25;
+@define-color m3_pill_hover  #2D2932;
+@define-color m3_unactive    #37343B;
+@define-color m3_active      #D0BCFF;
+@define-color m3_alt         #C0D1F7;
+@define-color m3_on_active   #141318;
+@define-color m3_text        #E6E0E9;
+@define-color m3_subtext     #CAC4D0;
+@define-color m3_outline     #938F99;
+@define-color red            #f38ba8;
+
+* {
+    font-family: "JetBrainsMono Nerd Font Propo", "JetBrainsMono Nerd Font", "JetBrains Mono Nerd Font", monospace;
+    font-size: 13px;
+    font-weight: bold;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+window.cc-window,
+window.cc-window.background,
+.cc-backdrop {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+
+.cc-popup {
+    background-color: @m3_bg;
+    background-image: none;
+    color: @m3_text;
+    border: 1px solid rgba(208, 188, 255, 0.14);
+    border-radius: 24px;
+    padding: 16px;
+}
+
+/* Header */
+.cc-avatar {
+    background-color: @m3_active;
+    color: @m3_on_active;
+    font-size: 20px;
+    min-width: 42px;
+    min-height: 42px;
+    border-radius: 99px;
+}
+
+.cc-user-title {
+    color: @m3_text;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.cc-user-sub {
+    color: @m3_subtext;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.cc-session-btn {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    border-radius: 99px;
+    font-size: 14px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cc-session-btn:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.cc-session-danger {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @red;
+    border: none;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    border-radius: 99px;
+    font-size: 14px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cc-session-danger:hover {
+    background-color: @red;
+    color: @m3_on_active;
+}
+
+/* Slider Rows */
+.cc-slider-icon {
+    background-color: @m3_pill;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+    border-radius: 99px;
+    font-size: 17px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cc-slider-icon:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.cc-slider-icon.muted {
+    background-color: rgba(243, 139, 168, 0.16);
+    color: @red;
+}
+
+.cc-slider-icon.muted:hover {
+    background-color: @red;
+    color: @m3_on_active;
+}
+
+scale.cc-scale {
+    padding: 0;
+    min-height: 28px;
+}
+
+scale.cc-scale > trough {
+    background-color: @m3_unactive;
+    background-image: none;
+    border: none;
+    border-radius: 12px;
+    min-height: 24px;
+}
+
+scale.cc-scale > trough > highlight {
+    background-color: @m3_active;
+    background-image: none;
+    border: none;
+    border-radius: 12px;
+    min-height: 24px;
+}
+
+scale.cc-scale.muted > trough > highlight {
+    background-color: @m3_outline;
+}
+
+scale.cc-scale > trough > slider {
+    background-color: @m3_active;
+    background-image: none;
+    border: 3px solid @m3_bg;
+    border-radius: 4px;
+    min-width: 7px;
+    min-height: 30px;
+    margin: -3px 0;
+    box-shadow: none;
+}
+
+scale.cc-scale.muted > trough > slider {
+    background-color: @m3_outline;
+}
+
+.cc-slider-pct {
+    color: @m3_subtext;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 52px;
+}
+
+/* 2x3 Quick-Settings Tiles */
+.cc-tile {
+    background-color: @m3_pill;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    border-radius: 28px;
+    padding: 9px 14px 9px 10px;
+    min-height: 62px;
+    transition: background-color 150ms ease;
+}
+
+.cc-tile:hover {
+    background-color: @m3_pill_hover;
+}
+
+.cc-icon-active {
+    background-color: @m3_active;
+    color: @m3_on_active;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 99px;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.cc-icon-inactive {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 99px;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.cc-tile-title {
+    color: @m3_text;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.cc-tile-sub {
+    color: @m3_subtext;
+    font-size: 11px;
+    font-weight: normal;
+}
