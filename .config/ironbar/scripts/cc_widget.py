@@ -561,7 +561,7 @@ class ControlCenterApp(Gtk.Application):
 
         _, self.net_icon, self.net_sub = self._make_tile(
             "󰤨", "Network", "Checking...", True,
-            lambda: self._spawn_detached([os.path.join(SCRIPT_DIR, "nmtui-floating.sh")], hide=True),
+            lambda: self._spawn_detached([os.path.join(SCRIPT_DIR, "net_widget.py"), "--show"], hide=True),
         )
         net_btn = self.net_icon.get_ancestor(Gtk.Button)
 

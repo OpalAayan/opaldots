@@ -401,6 +401,7 @@ class VolumeWidgetApp(Gtk.Application):
 
         scrolled = Gtk.ScrolledWindow()
         scrolled.add_css_class("vol-scroll")
+        scrolled.set_overlay_scrolling(False)
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolled.set_max_content_height(260)
         scrolled.set_propagate_natural_height(True)

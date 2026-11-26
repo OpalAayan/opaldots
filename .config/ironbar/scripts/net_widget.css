@@ -1,0 +1,464 @@
+/* Android M3 Purplish GTK4 Stylesheet for Ironbar Network Widget */
+
+@define-color m3_bg          #141318;
+@define-color m3_pill        #221F25;
+@define-color m3_pill_hover  #2D2932;
+@define-color m3_unactive    #37343B;
+@define-color m3_active      #D0BCFF;
+@define-color m3_alt         #C0D1F7;
+@define-color m3_on_active   #141318;
+@define-color m3_text        #E6E0E9;
+@define-color m3_subtext     #CAC4D0;
+@define-color m3_outline     #938F99;
+@define-color teal           #94e2d5;
+@define-color mauve          #cba6f7;
+@define-color green          #a6e3a1;
+@define-color red            #f38ba8;
+
+* {
+    font-family: "JetBrainsMono Nerd Font Propo", "JetBrainsMono Nerd Font", "JetBrains Mono Nerd Font", monospace;
+    font-size: 13px;
+    outline: none;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+window.net-window,
+window.net-window.background,
+.net-backdrop {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+
+.net-popup {
+    background-color: @m3_bg;
+    background-image: none;
+    color: @m3_text;
+    border: 1px solid rgba(208, 188, 255, 0.16);
+    border-radius: 24px;
+    padding: 14px;
+}
+
+.net-title {
+    color: @m3_text;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.net-subtitle {
+    color: @m3_subtext;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.net-section-title {
+    color: @m3_active;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.net-muted {
+    color: @m3_subtext;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.net-header-card {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 10px 14px;
+}
+
+.net-card,
+.net-details-card {
+    background-color: @m3_pill;
+    border-radius: 20px;
+    padding: 14px;
+}
+
+.net-speed-card {
+    background-color: @m3_pill;
+    border-radius: 18px;
+    padding: 8px 12px;
+}
+
+.net-speed-down {
+    color: @teal;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.net-speed-up {
+    color: @m3_active;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.net-transport-chip {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    border-radius: 99px;
+    padding: 3px 9px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.net-transport-chip.vpn {
+    background-color: rgba(203, 166, 247, 0.22);
+    color: @mauve;
+}
+
+.net-row {
+    background-color: @m3_pill;
+    border-radius: 22px;
+    padding: 9px 12px;
+    transition: background-color 150ms ease;
+}
+
+.net-row:hover {
+    background-color: @m3_pill_hover;
+}
+
+.net-row-clickable {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 14px;
+}
+
+.net-row-clickable:hover {
+    background-color: transparent;
+}
+
+.net-icon-circle {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    border-radius: 99px;
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 17px;
+    font-weight: normal;
+}
+
+.net-icon-circle.connected {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.net-icon-circle.vpn-active {
+    background-color: @mauve;
+    color: @m3_on_active;
+}
+
+.net-hero-icon {
+    background-color: @m3_unactive;
+    color: @m3_text;
+    border-radius: 99px;
+    min-width: 68px;
+    min-height: 68px;
+    font-size: 28px;
+    font-weight: normal;
+}
+
+.net-hero-icon.connected {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.net-hero-icon.vpn-active {
+    background-color: @mauve;
+    color: @m3_on_active;
+}
+
+.net-chevron {
+    color: @m3_outline;
+    font-size: 15px;
+    margin-left: 6px;
+    margin-right: 4px;
+}
+
+.net-icon-btn {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    border-radius: 99px;
+    font-size: 14px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.net-icon-btn:hover,
+.net-icon-btn.active {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.net-btn-primary {
+    background-color: @m3_active;
+    background-image: none;
+    color: @m3_on_active;
+    border: none;
+    border-radius: 99px;
+    padding: 8px 16px;
+    font-weight: bold;
+    transition: background-color 150ms ease;
+}
+
+.net-btn-primary:hover {
+    background-color: @m3_alt;
+}
+
+.net-btn-primary:disabled {
+    background-color: @m3_unactive;
+    color: @m3_outline;
+}
+
+.net-btn-secondary {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    border-radius: 99px;
+    padding: 8px 14px;
+    font-weight: bold;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.net-btn-secondary:hover {
+    background-color: @m3_pill_hover;
+    color: @m3_active;
+}
+
+.net-btn-danger {
+    background-color: rgba(243, 139, 168, 0.16);
+    background-image: none;
+    color: @red;
+    border: none;
+    border-radius: 99px;
+    padding: 8px 14px;
+    font-weight: bold;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.net-btn-danger:hover {
+    background-color: @red;
+    color: @m3_on_active;
+}
+
+.net-btn-small {
+    padding: 5px 12px;
+    font-size: 12px;
+    min-height: 26px;
+    border-radius: 99px;
+}
+
+.net-chip {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_subtext;
+    border: none;
+    border-radius: 99px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    min-height: 24px;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.net-chip:hover {
+    background-color: @m3_pill_hover;
+    color: @m3_text;
+}
+
+.net-chip.active {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+.net-entry {
+    background-color: @m3_pill;
+    background-image: none;
+    color: @m3_text;
+    caret-color: @m3_active;
+    border: 1px solid rgba(208, 188, 255, 0.16);
+    border-radius: 16px;
+    padding: 8px 12px;
+    min-height: 36px;
+}
+
+.net-entry:focus {
+    border: 1px solid @m3_active;
+}
+
+.net-entry placeholder {
+    color: @m3_outline;
+}
+
+/* Native GTK4 Switch styled as Android M3 Pill Switch */
+switch.net-switch {
+    background-color: @m3_pill;
+    background-image: none;
+    border: 2px solid @m3_outline;
+    border-radius: 99px;
+    min-width: 44px;
+    min-height: 24px;
+    padding: 2px;
+    transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+switch.net-switch:checked {
+    background-color: @m3_active;
+    border: 2px solid @m3_active;
+}
+
+switch.net-switch:disabled {
+    opacity: 0.5;
+}
+
+switch.net-switch > slider {
+    background-color: @m3_outline;
+    background-image: none;
+    border: none;
+    border-radius: 99px;
+    min-width: 16px;
+    min-height: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+switch.net-switch:checked > slider {
+    background-color: @m3_on_active;
+}
+
+switch.net-switch > image {
+    opacity: 0;
+    min-width: 0;
+    min-height: 0;
+}
+
+.net-banner {
+    border-radius: 16px;
+    padding: 9px 12px;
+    border: 1px solid rgba(208, 188, 255, 0.22);
+    background-color: rgba(208, 188, 255, 0.10);
+}
+
+.net-banner.info {
+    border-color: rgba(208, 188, 255, 0.28);
+    background-color: rgba(208, 188, 255, 0.12);
+}
+
+.net-banner.success {
+    border-color: rgba(166, 227, 161, 0.35);
+    background-color: rgba(166, 227, 161, 0.12);
+}
+
+.net-banner.error {
+    border-color: rgba(243, 139, 168, 0.38);
+    background-color: rgba(243, 139, 168, 0.14);
+}
+
+.net-banner-text {
+    color: @m3_text;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.net-badge {
+    border-radius: 99px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    background-color: @m3_unactive;
+    color: @m3_text;
+}
+
+.net-badge.connected {
+    background-color: rgba(166, 227, 161, 0.18);
+    color: @green;
+}
+
+.net-detail-key {
+    color: @m3_subtext;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.net-detail-val {
+    color: @m3_text;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.net-divider {
+    background-color: rgba(255, 255, 255, 0.06);
+    min-height: 1px;
+}
+
+dropdown.net-dropdown > button {
+    background-color: @m3_unactive;
+    background-image: none;
+    color: @m3_text;
+    border: none;
+    border-radius: 14px;
+    padding: 7px 12px;
+}
+
+dropdown.net-dropdown > button:hover {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+dropdown.net-dropdown > button label {
+    color: inherit;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+dropdown.net-dropdown popover > contents {
+    background-color: @m3_pill;
+    background-image: none;
+    border: 1px solid rgba(208, 188, 255, 0.20);
+    border-radius: 16px;
+    padding: 6px;
+}
+
+dropdown.net-dropdown popover row {
+    border-radius: 10px;
+    padding: 6px 10px;
+    color: @m3_text;
+}
+
+dropdown.net-dropdown popover row:hover,
+dropdown.net-dropdown popover row:selected {
+    background-color: @m3_active;
+    color: @m3_on_active;
+}
+
+dropdown.net-dropdown popover row:hover label,
+dropdown.net-dropdown popover row:selected label {
+    color: @m3_on_active;
+}
+
+.net-scroll scrollbar {
+    background-color: transparent;
+    border: none;
+    margin-left: 6px;
+}
+
+.net-scroll scrollbar slider {
+    background-color: @m3_unactive;
+    border-radius: 99px;
+    min-width: 5px;
+    min-height: 24px;
+}
+
+.net-scroll scrollbar slider:hover {
+    background-color: @m3_outline;
+}

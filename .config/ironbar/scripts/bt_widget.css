@@ -372,6 +372,7 @@ switch.bt-switch > image {
 .bt-scroll scrollbar {
     background-color: transparent;
     border: none;
+    margin-left: 6px;
 }
 
 .bt-scroll scrollbar slider {

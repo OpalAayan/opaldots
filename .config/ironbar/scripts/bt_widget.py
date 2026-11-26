@@ -398,6 +398,7 @@ class BluetoothWidgetApp(Gtk.Application):
 
         scrolled = Gtk.ScrolledWindow()
         scrolled.add_css_class("bt-scroll")
+        scrolled.set_overlay_scrolling(False)
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolled.set_max_content_height(420)
         scrolled.set_propagate_natural_height(True)

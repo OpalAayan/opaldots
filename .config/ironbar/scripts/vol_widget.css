@@ -211,6 +211,7 @@ dropdown.vol-dropdown popover row:selected label {
 .vol-scroll scrollbar {
     background-color: transparent;
     border: none;
+    margin-left: 6px;
 }
 
 .vol-scroll scrollbar slider {

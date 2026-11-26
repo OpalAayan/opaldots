@@ -255,140 +255,16 @@
       "type": "custom",
       "name": "network",
       "class": "network",
-      "tooltip": "Network: {{2000:~/.config/ironbar/scripts/network_status.sh name}}",
+      "tooltip": "{{watch:~/.config/ironbar/scripts/net_backend.py watch tooltip}}",
       "on_click_right": "~/.config/ironbar/scripts/nmtui-floating.sh",
+      "on_click_middle": "~/.config/ironbar/scripts/net_backend.py toggle-wifi",
       "bar": [
         {
           "type": "button",
           "name": "network-btn",
           "class": "network-btn",
-          "label": "{{2000:~/.config/ironbar/scripts/network_status.sh icon}}",
-          "on_click": "popup:toggle"
-        }
-      ],
-      "popup": [
-        {
-          "type": "box",
-          "orientation": "vertical",
-          "class": "net-root",
-          "widgets": [
-            {
-              "type": "box",
-              "orientation": "horizontal",
-              "valign": "center",
-              "class": "net-header",
-              "widgets": [
-                {
-                  "type": "box",
-                  "orientation": "horizontal",
-                  "halign": "start",
-                  "valign": "center",
-                  "class": "net-title-group",
-                  "widgets": [
-                    {
-                      "type": "label",
-                      "class": "icon-active",
-                      "label": "{{5000:~/.config/ironbar/scripts/network_status.sh icon}}"
-                    },
-                    {
-                      "type": "label",
-                      "class": "net-title-text",
-                      "justify": "left",
-                      "label": "<b>NetworkManager</b>\n<span size='small' alpha='75%'>{{5000:~/.config/ironbar/scripts/network_status.sh subtitle}}</span>"
-                    }
-                  ]
-                },
-                {
-                  "type": "box",
-                  "orientation": "horizontal",
-                  "halign": "end",
-                  "valign": "center",
-                  "class": "cc-session",
-                  "widgets": [
-                    {
-                      "type": "button",
-                      "class": "session-btn",
-                      "label": "󰑐",
-                      "tooltip": "Rescan Wi-Fi Networks",
-                      "on_click": "!~/.config/ironbar/scripts/network_status.sh rescan"
-                    },
-                    {
-                      "type": "button",
-                      "class": "session-btn",
-                      "label": "󰒓",
-                      "tooltip": "Open NetworkManager TUI",
-                      "on_click": "!~/.config/ironbar/scripts/nmtui-floating.sh"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "orientation": "vertical",
-              "class": "net-card",
-              "widgets": [
-                {
-                  "type": "label",
-                  "class": "net-details",
-                  "justify": "left",
-                  "label": "{{3000:~/.config/ironbar/scripts/network_status.sh details}}"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "orientation": "vertical",
-              "class": "net-card",
-              "widgets": [
-                {
-                  "type": "label",
-                  "class": "net-section-title",
-                  "justify": "left",
-                  "label": "Available Wi-Fi Networks"
-                },
-                {
-                  "type": "label",
-                  "class": "net-wifi-list",
-                  "justify": "left",
-                  "label": "{{5000:~/.config/ironbar/scripts/network_status.sh wifi_list}}"
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "orientation": "horizontal",
-              "class": "net-actions-row",
-              "widgets": [
-                {
-                  "type": "button",
-                  "class": "net-action-tile",
-                  "on_click": "!~/.config/ironbar/scripts/network_status.sh toggle-wifi",
-                  "widgets": [
-                    {
-                      "type": "box",
-                      "orientation": "horizontal",
-                      "halign": "start",
-                      "valign": "center",
-                      "widgets": [
-                        {
-                          "type": "label",
-                          "class": "icon-active",
-                          "label": "󰤨"
-                        },
-                        {
-                          "type": "label",
-                          "class": "tile-text",
-                          "justify": "left",
-                          "label": "<b>Wi-Fi Radio</b>\n<span size='small' alpha='75%'>{{3000:~/.config/ironbar/scripts/network_status.sh wifi_status}}</span>"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+          "label": "{{watch:~/.config/ironbar/scripts/net_backend.py watch icon}}",
+          "on_click": "!~/.config/ironbar/scripts/net_widget.py --toggle"
         }
       ]
     },
